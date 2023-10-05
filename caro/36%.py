@@ -31,8 +31,7 @@ again_rect = pygame.Rect(screen_width // 2 - 150, screen_height // 2 + 10, 300, 
 
 #Vẽ lưới
 def draw_grid():
-    bg = ((255,255,255))
-    screen.fill(bg)
+    screen.fill(white)
     x = 1
     pygame.draw.line(screen, gray, (30, x * 30), (screen_width - 30, x * 30), line_width + 2)
     pygame.draw.line(screen, gray, (x * 30, 30), (x * 30, screen_height - 30), line_width + 2)
@@ -58,108 +57,49 @@ def draw_markers():
 #Kiểm tra người thắng
 def check_winner(x, y, cnt):
     # Check hàng ngang
-    if x <= 14 and sum(markers[x + i][y] for i in range(5)) == 5:
-        return 1
-    if x <= 14 and sum(markers[x + i][y] for i in range(5)) == -5:
-        return 2
-
-    if x <= 15 and x >= 2 and sum(markers[x + i][y] for i in range(-1, 4)) == 5:
-        return 1
-    if x <= 15 and x >= 2 and sum(markers[x + i][y] for i in range(-1, 4)) == -5:
-        return 2
-
-    if x <= 16 and x >= 3 and sum(markers[x + i][y] for i in range(-2, 3)) == 5:
-        return 1
-    if x <= 16 and x >= 3 and sum(markers[x + i][y] for i in range(-2, 3)) == -5:
-        return 2
-
-    if x <= 17 and x >= 4 and sum(markers[x + i][y] for i in range(-3, 2)) == 5:
-        return 1
-    if x <= 17 and x >= 4 and sum(markers[x + i][y] for i in range(-3, 2)) == -5:
-        return 2
-
-    if x <= 18 and x >= 4 and sum(markers[x + i][y] for i in range(-4, 1)) == 5:
-        return 1
-    if x <= 18 and x >= 4 and sum(markers[x + i][y] for i in range(-4, 1)) == -5:
-        return 2
+    l, r = 0, 5
+    while l >= -4 and r >= 1:
+        if x + r <= 19 and x + l >= 1 and sum(markers[x + i][y] for i in range(l, r)) == 5:
+            pygame.draw.line(screen, red, ((x + l) * 30, y * 30 + 15), ((x + r) * 30, y * 30 + 15), line_width + 3)
+            return 1
+        if x + r <= 19 and x + l >= 1 and sum(markers[x + i][y] for i in range(l, r)) == -5:
+            pygame.draw.line(screen, green, ((x + l) * 30, y * 30 + 15), ((x + r) * 30, y * 30 + 15), line_width + 3)
+            return 2
+        l -= 1
+        r -= 1
     #Check hàng dọc
-    if y <= 14 and sum(markers[x][y + i] for i in range(5)) == 5:
-        return 1
-    if y <= 14 and sum(markers[x][y + i] for i in range(5)) == -5:
-        return 2
-
-    if y <= 15 and y >= 2 and sum(markers[x][y + i] for i in range(-1, 4)) == 5:
-        return 1
-    if y <= 15 and y >= 2 and sum(markers[x][y + i] for i in range(-1, 4)) == -5:
-        return 2
-
-    if y <= 16 and y >= 3 and sum(markers[x][y + i] for i in range(-2, 3)) == 5:
-        return 1
-    if y <= 16 and y >= 3 and sum(markers[x][y + i] for i in range(-2, 3)) == -5:
-        return 2
-
-    if y <= 17 and y >= 4 and sum(markers[x][y + i] for i in range(-3, 2)) == 5:
-        return 1
-    if y <= 17 and y >= 4 and sum(markers[x][y + i] for i in range(-3, 2)) == -5:
-        return 2
-
-    if y <= 18 and y >= 5 and sum(markers[x][y + i] for i in range(-4, 1)) == 5:
-        return 1
-    if y <= 18 and y >= 5 and sum(markers[x][y + i] for i in range(-4, 1)) == -5:
-        return 2
-
+    l, r = 0, 5
+    while l >= -4 and r >= 1:
+        if y + r <= 19 and y + l >= 1 and sum(markers[x][y + i] for i in range(l, r)) == 5:
+            pygame.draw.line(screen, red, (x * 30 + 15, (y + l) * 30), (x * 30 + 15, (y + r) * 30), line_width + 3)
+            return 1
+        if y + r <= 19 and y + l >= 1 and sum(markers[x][y + i] for i in range(l, r)) == -5:
+            pygame.draw.line(screen, green, (x * 30 + 15, (y + l) * 30), (x * 30 + 15, (y + r) * 30), line_width + 3)
+            return 2
+        l -= 1
+        r -= 1
     #Check hàng chéo góc phần tư thứ II và IV
-    if x <= 14 and y <= 14 and sum(markers[x + i][y + i] for i in range(5)) == 5:
-        return 1
-    if x <= 14 and y <= 14 and sum(markers[x + i][y + i] for i in range(5)) == -5:
-        return 2
-
-    if x <= 15 and y <= 15 and x >= 2 and y >= 2 and sum(markers[x + i][y + i] for i in range(-1, 4)) == 5:
-        return 1
-    if x <= 15 and y <= 15 and x >= 2 and y >= 2 and sum(markers[x + i][y + i] for i in range(-1, 4)) == -5:
-        return 2
-
-    if x <= 16 and y <= 16 and x >= 3 and y >= 3 and sum(markers[x + i][y + i] for i in range(-2, 3)) == 5:
-        return 1
-    if x <= 16 and y <= 16 and x >= 3 and y >= 3 and sum(markers[x + i][y + i] for i in range(-2, 3)) == -5:
-        return 2
-
-    if x <= 17 and y <= 17 and x >= 4 and y >= 4 and sum(markers[x + i][y + i] for i in range(-3, 2)) == 5:
-        return 1
-    if x <= 17 and y <= 17 and x >= 4 and y >= 4 and sum(markers[x + i][y + i] for i in range(-3, 2)) == -5:
-        return 2
-
-    if x <= 18 and y <= 18 and x >= 5 and y >= 5 and sum(markers[x + i][y + i] for i in range(-4, 1)) == 5:
-        return 1
-    if x <= 18 and y <= 18 and x >= 5 and y >= 5 and sum(markers[x + i][y + i] for i in range(-4, 1)) == -5:
-        return 2
-
+    l, r = 0, 5
+    while l >= -4 and r >= 1:
+        if x + r <= 19 and y + r <= 19 and x + l >= 1 and y + l >= 1 and sum(markers[x + i][y + i] for i in range(l, r)) == 5:
+            pygame.draw.line(screen, red, ((x + r) * 30, (y + r) * 30), ((x + l) * 30, (y + l) * 30), line_width + 3)
+            return 1
+        if x + r <= 19 and y + r <= 19 and x + l >= 1 and y + l >= 1 and sum(markers[x + i][y + i] for i in range(l, r)) == -5:
+            pygame.draw.line(screen, green, ((x + r) * 30, (y + r) * 30), ((x + l) * 30, (y + l) * 30), line_width + 3)
+            return 2
+        l -= 1
+        r -= 1
     #Check chéo góc phần tư thứ I và III
-    if x <= 14 and y >= 5 and sum(markers[x + i][y - i] for i in range(5)) == 5:
-        return 1
-    if x <= 14 and y >= 5 and sum(markers[x + i][y - i] for i in range(5)) == -5:
-        return 2
-
-    if x <= 15 and y <= 17 and y >= 4 and sum(markers[x + i][y - i] for i in range(-1, 4)) == 5:
-        return 1
-    if x <= 15 and y <= 17 and y >= 4 and sum(markers[x + i][y - i] for i in range(-1, 4)) == -5:
-        return 2
-    
-    if x <= 16 and y <= 16 and y >= 3 and sum(markers[x + i][y - i] for i in range(-2, 3)) == 5:
-        return 1
-    if x <= 16 and y <= 16 and y >= 3 and sum(markers[x + i][y - i] for i in range(-2, 3)) == -5:
-        return 2
-
-    if x <= 17 and y <= 15 and y >= 2 and sum(markers[x + i][y - i] for i in range(-3, 2)) == 5:
-        return 1
-    if x <= 17 and y <= 15 and y >= 2 and sum(markers[x + i][y - i] for i in range(-3, 2)) == -5:
-        return 2
-
-    if x <= 18  and y <= 14 and sum(markers[x + i][y - i] for i in range(-4, 1)) == 5:
-        return 1
-    if x <= 18  and y <= 14 and sum(markers[x + i][y - i] for i in range(-4, 1)) == 5:
-        return 2    
-
+    l, r = 0, 5
+    while l >= -4 and r >= 1:
+        if x + r <= 19 and y - r >= 0 and x + l >= 1 and y - l <= 18 and sum(markers[x + i][y - i] for i in range(l, r)) == 5:
+            pygame.draw.line(screen, red, ((x + l) * 30, (y - l + 1) * 30), ((x + r) * 30, (y - r + 1) * 30), line_width + 3)
+            return 1
+        if x + r <= 19 and y - r >= 0 and x + l >= 1 and y - l <= 18 and sum(markers[x + i][y - i] for i in range(l, r)) == -5:
+            pygame.draw.line(screen, green, ((x + l) * 30, (y - l + 1) * 30), ((x + r) * 30, (y - r + 1) * 30), line_width + 3)
+            return 2
+        l -= 1
+        r -= 1
     # Nếu đánh hết bàn cờ mà chưa có người thắng thì là hòa
     if cnt == 18*18:
         return 0
@@ -221,12 +161,12 @@ while run:
                 cnt += 1
                 markers[cell_x][cell_y] = player    #Gán giá trị của ô cho player 1 hoặc -1
                 player *= -1                        #Đổi người chơi
-                print(cell_x, cell_y, cnt)
                 winner = check_winner(cell_x, cell_y, cnt)
                 if winner != None:
                     game_over = True
     
     if game_over == True:
+        check_winner(cell_x, cell_y, cnt)
         draw_winner()
         if event.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[0] == 1 and clicked == False:
             clicked = True
