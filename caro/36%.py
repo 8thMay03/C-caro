@@ -285,6 +285,7 @@ while run:
                             game_over = True
     
     if game_over == True:
+        draw_grid()
         draw_markers()
         check_winner(cell_x, cell_y, cnt)
         draw_winner()
