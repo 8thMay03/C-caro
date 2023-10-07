@@ -35,7 +35,7 @@ again_rect = pygame.Rect(screen_width // 2 - 150, screen_height // 2 + 10, 300, 
 mode_rect = pygame.Rect(100, 50, 400, 50)
 mode_rect1 = pygame.Rect(100, 200, 400, 50)
 mode_rect2 = pygame.Rect(100, 300, 400, 50)
-mode_rect3 = pygame.Rect(100, 400, 400, 50)
+mode_rect3 = pygame.Rect(80, 400, 440, 50)
 
 def draw_menu():
     pygame.draw.rect(screen, white, mode_rect)
