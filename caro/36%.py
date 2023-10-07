@@ -1,4 +1,5 @@
 import pygame
+import random
 
 pygame.init()
 
@@ -26,6 +27,7 @@ red = (255, 0, 0)
 gray = (186, 184, 179)
 white = (255, 255, 255)
 black = (0, 0, 0)
+yellow = (209, 201, 42)
 font = pygame.font.SysFont("monotype", 40)
 
 #Hình vuông đánh lại
@@ -52,9 +54,9 @@ def draw_menu():
     screen.blit(text_img, (180, 300))
     pygame.draw.rect(screen, white, mode_rect3)
 
-    text = "PLAYER VS COM"
+    text = "BLIND TIC TAC TOE"
     text_img = font.render(text, True, black)
-    screen.blit(text_img, (150, 400))
+    screen.blit(text_img, (95, 400))
 
 #Vẽ lưới
 def draw_grid():
@@ -82,8 +84,14 @@ def draw_markers():
                 pygame.draw.circle(screen, green, (center_x + 0.75, center_y + 0.75), 10, line_width + 2)
             if markers[x][y] == 2:
                 pygame.draw.line(screen, blue, (x * 30 + 7, (y + 1) * 30 - 7), ((x + 1) * 30 - 7, y * 30 + 7), line_width + 2)
-            
 
+def draw_markers3():            
+    for x in range(1, 19):
+        for y in range(1, 19):
+            if markers[x][y] != -1:
+                center_x = x * 30 + 15
+                center_y = y * 30 + 15
+                pygame.draw.circle(screen, yellow, (center_x + 0.75, center_y + 0.75), 10, line_width + 2)
 #Kiểm tra người thắng
 def check_winner(x, y, cnt):
     # Check hàng ngang
@@ -164,8 +172,10 @@ def draw_winner():
         pygame.draw.rect(screen, green, (screen_width // 2 - 150, screen_height // 2 - 50, 300, 50))
     elif winner == 3:
         pygame.draw.rect(screen, blue, (screen_width // 2 - 150, screen_height // 2 - 50, 300, 50))
+    else:
+        pygame.draw.rect(screen, yellow, (screen_width // 2 - 150, screen_height // 2 - 50, 300, 50))
     screen.blit(win_img, (screen_width // 2 - 150, screen_height // 2 - 50))
-
+        
     again_text = "Play again?"
     again_img = font.render(again_text, True, white)
     pygame.draw.rect(screen, blue, again_rect)
@@ -187,9 +197,12 @@ while run:
     if mode == None:
         #Vẽ menu
         draw_menu()
-    else:
+    elif mode == 1 or mode == 2:
         draw_grid()
         draw_markers()
+    elif mode == 3:
+        draw_grid()
+        draw_markers3()
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -249,8 +262,30 @@ while run:
                         winner = check_winner(cell_x, cell_y, cnt)
                         if winner != None:
                             game_over = True
+            if mode == 3:
+                if winner == None:
+                    if event.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[0] == 1 and clicked == False: #Nếu click chuột trái thì mới được tính là đã click
+                        clicked = True
+                    if event.type == pygame.MOUSEBUTTONUP  and clicked == True:
+                        clicked = False
+                        pos = pygame.mouse.get_pos()
+                        cell_x = pos[0] // 30
+                        cell_y = pos[1] // 30
+                        if markers[cell_x][cell_y] != -1 or cell_x == 19 or cell_x == 0 or cell_y == 19 or cell_y == 0:    #Nếu 1 ô đã được đánh dấu rồi thì không được thao tác trên ô đó nữa
+                            continue
+                        if player == 0:             #Player 1 thì dùng sound0
+                            movement_sound0.play()
+                        else:                       #Player 2 thì dùng sound1
+                            movement_sound1.play()
+                        cnt += 1
+                        markers[cell_x][cell_y] = player    #Gán giá trị của ô cho player 1 hoặc -1
+                        player = (player + 1) % 2                        #Đổi người chơi
+                        winner = check_winner(cell_x, cell_y, cnt)
+                        if winner != None:
+                            game_over = True
     
     if game_over == True:
+        draw_markers()
         check_winner(cell_x, cell_y, cnt)
         draw_winner()
         if event.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[0] == 1 and clicked == False:
