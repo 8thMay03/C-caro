@@ -28,10 +28,11 @@ gray = (186, 184, 179)
 white = (255, 255, 255)
 black = (0, 0, 0)
 yellow = (209, 201, 42)
-font = pygame.font.SysFont("monotype", 40)
+font = pygame.font.SysFont("monotype", 35)
 
 #Hình vuông đánh lại
 again_rect = pygame.Rect(screen_width // 2 - 150, screen_height // 2 + 10, 300, 50)
+menu_rect = pygame.Rect(250, 0, 85, 30)
 mode_rect = pygame.Rect(100, 50, 400, 50)
 mode_rect1 = pygame.Rect(100, 200, 400, 50)
 mode_rect2 = pygame.Rect(100, 300, 400, 50)
@@ -41,22 +42,22 @@ def draw_menu():
     pygame.draw.rect(screen, white, mode_rect)
     text = "SELECT MODE"
     text_img = font.render(text, True, black)
-    screen.blit(text_img, (170, 50))
+    screen.blit(text_img, (185, 55))
     pygame.draw.rect(screen, white, mode_rect1)
 
     text = "2 PLAYERS"
     text_img = font.render(text, True, black)
-    screen.blit(text_img, (180, 200))
+    screen.blit(text_img, (200, 205))
     pygame.draw.rect(screen, white, mode_rect2)
 
     text = "3 PLAYERS"
     text_img = font.render(text, True, black)
-    screen.blit(text_img, (180, 300))
+    screen.blit(text_img, (200, 305))
     pygame.draw.rect(screen, white, mode_rect3)
 
     text = "BLIND TIC TAC TOE"
     text_img = font.render(text, True, black)
-    screen.blit(text_img, (95, 400))
+    screen.blit(text_img, (120, 405))
 
 #Vẽ lưới
 def draw_grid():
@@ -70,6 +71,10 @@ def draw_grid():
     for x in range(2, 19):
         pygame.draw.line(screen, gray, (30, x * 30), (screen_width - 30, x * 30), line_width)
         pygame.draw.line(screen, gray, (x * 30, 30), (x * 30, screen_height - 30), line_width)
+    pygame.draw.rect(screen, blue, menu_rect)
+    text = "MENU"
+    text_img = font.render(text, True, black)
+    screen.blit(text_img, (250, 0))
 
 #Vẽ X và O    
 def draw_markers():
@@ -174,12 +179,12 @@ def draw_winner():
         pygame.draw.rect(screen, blue, (screen_width // 2 - 150, screen_height // 2 - 50, 300, 50))
     else:
         pygame.draw.rect(screen, yellow, (screen_width // 2 - 150, screen_height // 2 - 50, 300, 50))
-    screen.blit(win_img, (screen_width // 2 - 150, screen_height // 2 - 50))
+    screen.blit(win_img, (screen_width // 2 - 125, screen_height // 2 - 50))
         
     again_text = "Play again?"
     again_img = font.render(again_text, True, white)
     pygame.draw.rect(screen, blue, again_rect)
-    screen.blit(again_img, (screen_width // 2 - 125, screen_height // 2 + 10))
+    screen.blit(again_img, (screen_width // 2 - 110, screen_height // 2 + 10))
 
 # Khởi tạo lại trò chơi
 def restart():
@@ -227,6 +232,12 @@ while run:
                     if event.type == pygame.MOUSEBUTTONUP  and clicked == True:
                         clicked = False
                         pos = pygame.mouse.get_pos()
+                        if menu_rect.collidepoint(pos): #Nếu click vào ô menu thì sẽ quay trở lại menu
+                            restart()
+                            screen.fill(black)
+                            draw_menu()
+                            mode = None
+                            continue
                         cell_x = pos[0] // 30
                         cell_y = pos[1] // 30
                         if markers[cell_x][cell_y] != -1 or cell_x == 19 or cell_x == 0 or cell_y == 19 or cell_y == 0:    #Nếu 1 ô đã được đánh dấu rồi thì không được thao tác trên ô đó nữa
@@ -248,6 +259,12 @@ while run:
                     if event.type == pygame.MOUSEBUTTONUP  and clicked == True:
                         clicked = False
                         pos = pygame.mouse.get_pos()
+                        if menu_rect.collidepoint(pos): #Nếu click vào ô menu thì sẽ quay trở lại menu
+                            restart()
+                            screen.fill(black)
+                            draw_menu()
+                            mode = None
+                            continue
                         cell_x = pos[0] // 30
                         cell_y = pos[1] // 30
                         if markers[cell_x][cell_y] != -1 or cell_x == 19 or cell_x == 0 or cell_y == 19 or cell_y == 0:    #Nếu 1 ô đã được đánh dấu rồi thì không được thao tác trên ô đó nữa
@@ -269,6 +286,12 @@ while run:
                     if event.type == pygame.MOUSEBUTTONUP  and clicked == True:
                         clicked = False
                         pos = pygame.mouse.get_pos()
+                        if menu_rect.collidepoint(pos): #Nếu click vào ô menu thì sẽ quay trở lại menu
+                            restart()
+                            screen.fill(black)
+                            draw_menu()
+                            mode = None
+                            continue
                         cell_x = pos[0] // 30
                         cell_y = pos[1] // 30
                         if markers[cell_x][cell_y] != -1 or cell_x == 19 or cell_x == 0 or cell_y == 19 or cell_y == 0:    #Nếu 1 ô đã được đánh dấu rồi thì không được thao tác trên ô đó nữa
