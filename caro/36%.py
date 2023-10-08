@@ -29,6 +29,7 @@ white = (255, 255, 255)
 black = (0, 0, 0)
 yellow = (209, 201, 42)
 font = pygame.font.SysFont("monotype", 35)
+font1 = pygame.font.SysFont(None, 50)
 
 #Hình vuông đánh lại
 again_rect = pygame.Rect(screen_width // 2 - 150, screen_height // 2 + 10, 300, 50)
@@ -41,8 +42,8 @@ mode_rect3 = pygame.Rect(80, 400, 440, 50)
 def draw_menu():
     pygame.draw.rect(screen, white, mode_rect)
     text = "SELECT MODE"
-    text_img = font.render(text, True, black)
-    screen.blit(text_img, (185, 55))
+    text_img = font1.render(text, True, black)
+    screen.blit(text_img, (175, 60))
     pygame.draw.rect(screen, white, mode_rect1)
 
     text = "2 PLAYERS"
@@ -124,7 +125,7 @@ def check_winner(x, y, cnt):
             return 2
         if y + r <= 19 and y + l >= 1 and markers[x][y + l] == markers[x][y + l + 1] == markers[x][y + l + 2] == markers[x][y + l + 3] == markers[x][y + l + 4] == 2:
             pygame.draw.line(screen, blue, (x * 30 + 15, (y + l) * 30), (x * 30 + 15, (y + r) * 30), line_width + 3)
-            return 2
+            return 3
         l -= 1
         r -= 1
     #Check hàng chéo góc phần tư thứ II và IV
