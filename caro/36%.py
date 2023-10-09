@@ -51,6 +51,8 @@ green_rect = pygame.Surface((300, 50), pygame.SRCALPHA)
 pygame.draw.rect(green_rect, (32, 230, 38, 200), (0, 0, 300, 50))
 blue_rect = pygame.Surface((300, 50), pygame.SRCALPHA)
 pygame.draw.rect(blue_rect, (53, 126, 242, 200), (0, 0, 300, 50))
+black_rect = pygame.Surface((300, 50), pygame.SRCALPHA)
+pygame.draw.rect(black_rect, (0, 0, 0, 200), (0, 0, 300, 50))
 
 def draw_menu():
     pygame.draw.rect(screen, white, mode_rect)
@@ -130,12 +132,14 @@ def draw_winner():
         screen.blit(blue_rect, (screen_width // 2 - 150, screen_height // 2 - 50))
     else:
         pygame.draw.rect(screen, yellow, (screen_width // 2 - 150, screen_height // 2 - 50, 300, 50))
-    screen.blit(win_img, (screen_width // 2 - 125, screen_height // 2 - 50))
-        
+    if winner != 0:
+        screen.blit(win_img, (screen_width // 2 - 125, screen_height // 2 - 45))
+    else:
+        screen.blit(win_img, (screen_width // 2 - 30, screen_height // 2 - 45))    
     again_text = "Play again?"
     again_img = font.render(again_text, True, white)
-    screen.blit(blue_rect, (screen_width // 2 - 150, screen_height // 2 + 10))
-    screen.blit(again_img, (screen_width // 2 - 110, screen_height // 2 + 10))
+    screen.blit(black_rect, (screen_width // 2 - 150, screen_height // 2 + 10))
+    screen.blit(again_img, (screen_width // 2 - 110, screen_height // 2 + 12))
 #Kiểm tra người thắng
 def check_winner(x, y, cnt):
     # Check hàng ngang
@@ -214,7 +218,7 @@ def check_winner(x, y, cnt):
 
 # Khởi tạo lại trò chơi
 def restart():
-    global markers, player, winner, game_over
+    global markers, player, winner, game_over, cnt
     markers = [[-1 for _ in range(20)] for _ in range(20)] 
     player = 0          
     winner = None       
