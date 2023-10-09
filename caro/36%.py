@@ -29,11 +29,11 @@ white = (255, 255, 255, 120)
 black = (0, 0, 0, 120)
 yellow = (209, 201, 42, 120)
 font = pygame.font.SysFont("monotype", 35)
-font1 = pygame.font.SysFont(None, 50)
+font1 = pygame.font.SysFont(None, 40)
 
 #Hình vuông đánh lại
 again_rect = pygame.Rect(screen_width // 2 - 150, screen_height // 2 + 10, 300, 50)
-menu_rect = pygame.Rect(250, 0, 85, 30)
+menu_rect = pygame.Rect(250, 0, 100, 27)
 mode_rect = pygame.Rect(100, 50, 400, 50)
 mode_rect1 = pygame.Rect(100, 200, 400, 50)
 mode_rect2 = pygame.Rect(100, 300, 400, 50)
@@ -58,7 +58,7 @@ def draw_menu():
     pygame.draw.rect(screen, white, mode_rect)
     text = "SELECT MODE"
     text_img = font1.render(text, True, black)
-    screen.blit(text_img, (175, 60))
+    screen.blit(text_img, (200, 60))
     pygame.draw.rect(screen, white, mode_rect1)
 
     text = "2 PLAYERS"
@@ -89,8 +89,8 @@ def draw_grid():
         pygame.draw.line(screen, gray, (x * 30, 30), (x * 30, screen_height - 30), line_width)
     pygame.draw.rect(screen, blue, menu_rect)
     text = "MENU"
-    text_img = font.render(text, True, black)
-    screen.blit(text_img, (250, 0))
+    text_img = font1.render(text, True, black)
+    screen.blit(text_img, (262, 2))
 
 #Vẽ X và O    
 def draw_markers():
