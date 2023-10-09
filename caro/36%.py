@@ -21,13 +21,13 @@ cnt = 0    #Đếm xem bao nhiêu ô đã được đánh dấu
 mode = None
 
 #Đĩnh nghĩa màu và font chữ
-blue = (53, 126, 242)
-green = (32, 230, 38)
-red = (255, 0, 0)
-gray = (186, 184, 179)
-white = (255, 255, 255)
-black = (0, 0, 0)
-yellow = (209, 201, 42)
+blue = (53, 126, 242, 120)
+green = (32, 230, 38, 120)
+red = (255, 0, 0, 120)
+gray = (186, 184, 179, 120)
+white = (255, 255, 255, 120)
+black = (0, 0, 0, 120)
+yellow = (209, 201, 42, 120)
 font = pygame.font.SysFont("monotype", 35)
 font1 = pygame.font.SysFont(None, 50)
 
@@ -38,6 +38,19 @@ mode_rect = pygame.Rect(100, 50, 400, 50)
 mode_rect1 = pygame.Rect(100, 200, 400, 50)
 mode_rect2 = pygame.Rect(100, 300, 400, 50)
 mode_rect3 = pygame.Rect(80, 400, 440, 50)
+
+red_surface = pygame.Surface((30, 30), pygame.SRCALPHA)
+pygame.draw.rect(red_surface, red, (0, 0, 30, 30))
+green_surface = pygame.Surface((30, 30), pygame.SRCALPHA)
+pygame.draw.rect(green_surface, green, (0, 0, 30, 30))
+blue_surface = pygame.Surface((30, 30), pygame.SRCALPHA)
+pygame.draw.rect(blue_surface, blue, (0, 0, 30, 30))
+red_rect = pygame.Surface((300, 50), pygame.SRCALPHA)
+pygame.draw.rect(red_rect, (255, 0, 0, 200), (0, 0, 300, 50))
+green_rect = pygame.Surface((300, 50), pygame.SRCALPHA)
+pygame.draw.rect(green_rect, (32, 230, 38, 200), (0, 0, 300, 50))
+blue_rect = pygame.Surface((300, 50), pygame.SRCALPHA)
+pygame.draw.rect(blue_rect, (53, 126, 242, 200), (0, 0, 300, 50))
 
 def draw_menu():
     pygame.draw.rect(screen, white, mode_rect)
@@ -90,7 +103,7 @@ def draw_markers():
                 pygame.draw.circle(screen, green, (center_x + 0.75, center_y + 0.75), 10, line_width + 2)
             if markers[x][y] == 2:
                 pygame.draw.line(screen, blue, (x * 30 + 7, (y + 1) * 30 - 7), ((x + 1) * 30 - 7, y * 30 + 7), line_width + 2)
-
+#Vẽ O cho chế độ cờ mù
 def draw_markers3():            
     for x in range(1, 19):
         for y in range(1, 19):
@@ -98,70 +111,7 @@ def draw_markers3():
                 center_x = x * 30 + 15
                 center_y = y * 30 + 15
                 pygame.draw.circle(screen, yellow, (center_x + 0.75, center_y + 0.75), 10, line_width + 2)
-#Kiểm tra người thắng
-def check_winner(x, y, cnt):
-    # Check hàng ngang
-    l, r = 0, 5
-    while l >= -4 and r >= 1:
-        if x + r <= 19 and x + l >= 1 and markers[x + l][y] == markers[x + l + 1][y] == markers[x + l + 2][y] == markers[x + l + 3][y] == markers[x + l + 4][y] == 0:
-            pygame.draw.line(screen, red, ((x + l) * 30, y * 30 + 15), ((x + r) * 30, y * 30 + 15), line_width + 3)
-            return 1
-        if x + r <= 19 and x + l >= 1 and markers[x + l][y] == markers[x + l + 1][y] == markers[x + l + 2][y] == markers[x + l + 3][y] == markers[x + l + 4][y] == 1:
-            pygame.draw.line(screen, green, ((x + l) * 30, y * 30 + 15), ((x + r) * 30, y * 30 + 15), line_width + 3)
-            return 2
-        if x + r <= 19 and x + l >= 1 and markers[x + l][y] == markers[x + l + 1][y] == markers[x + l + 2][y] == markers[x + l + 3][y] == markers[x + l + 4][y] == 2:
-            pygame.draw.line(screen, blue, ((x + l) * 30, y * 30 + 15), ((x + r) * 30, y * 30 + 15), line_width + 3)
-            return 3
-        l -= 1
-        r -= 1
-    #Check hàng dọc
-    l, r = 0, 5
-    while l >= -4 and r >= 1:
-        if y + r <= 19 and y + l >= 1 and markers[x][y + l] == markers[x][y + l + 1] == markers[x][y + l + 2] == markers[x][y + l + 3] == markers[x][y + l + 4] == 0:
-            pygame.draw.line(screen, red, (x * 30 + 15, (y + l) * 30), (x * 30 + 15, (y + r) * 30), line_width + 3)
-            return 1
-        if y + r <= 19 and y + l >= 1 and markers[x][y + l] == markers[x][y + l + 1] == markers[x][y + l + 2] == markers[x][y + l + 3] == markers[x][y + l + 4] == 1:
-            pygame.draw.line(screen, green, (x * 30 + 15, (y + l) * 30), (x * 30 + 15, (y + r) * 30), line_width + 3)
-            return 2
-        if y + r <= 19 and y + l >= 1 and markers[x][y + l] == markers[x][y + l + 1] == markers[x][y + l + 2] == markers[x][y + l + 3] == markers[x][y + l + 4] == 2:
-            pygame.draw.line(screen, blue, (x * 30 + 15, (y + l) * 30), (x * 30 + 15, (y + r) * 30), line_width + 3)
-            return 3
-        l -= 1
-        r -= 1
-    #Check hàng chéo góc phần tư thứ II và IV
-    l, r = 0, 5
-    while l >= -4 and r >= 1:
-        if x + r <= 19 and y + r <= 19 and x + l >= 1 and y + l >= 1 and markers[x + l][y + l] == markers[x + l + 1][y + l + 1] == markers[x + l + 2][y + l + 2] == markers[x + l + 3][y + l + 3] == markers[x + l + 4][y + l + 4] == 0:
-            pygame.draw.line(screen, red, ((x + r) * 30, (y + r) * 30), ((x + l) * 30, (y + l) * 30), line_width + 3)
-            return 1
-        if x + r <= 19 and y + r <= 19 and x + l >= 1 and y + l >= 1 and markers[x + l][y + l] == markers[x + l + 1][y + l + 1] == markers[x + l + 2][y + l + 2] == markers[x + l + 3][y + l + 3] == markers[x + l + 4][y + l + 4] == 1:
-            pygame.draw.line(screen, green, ((x + r) * 30, (y + r) * 30), ((x + l) * 30, (y + l) * 30), line_width + 3)
-            return 2
-        if x + r <= 19 and y + r <= 19 and x + l >= 1 and y + l >= 1 and markers[x + l][y + l] == markers[x + l + 1][y + l + 1] == markers[x + l + 2][y + l + 2] == markers[x + l + 3][y + l + 3] == markers[x + l + 4][y + l + 4] == 2:
-            pygame.draw.line(screen, blue, ((x + r) * 30, (y + r) * 30), ((x + l) * 30, (y + l) * 30), line_width + 3)
-            return 3
-        l -= 1
-        r -= 1
-    #Check chéo góc phần tư thứ I và III
-    l, r = 0, 5
-    while l >= -4 and r >= 1:
-        if x + r <= 19 and y - r >= 0 and x + l >= 1 and y - l <= 18 and markers[x + l][y - l] == markers[x + l + 1][y - l - 1] == markers[x + l + 2][y - l - 2] == markers[x + l + 3][y - l - 3] == markers[x + l + 4][y - l - 4] == 0:
-            pygame.draw.line(screen, red, ((x + l) * 30, (y - l + 1) * 30), ((x + r) * 30, (y - r + 1) * 30), line_width + 3)
-            return 1
-        if x + r <= 19 and y - r >= 0 and x + l >= 1 and y - l <= 18 and markers[x + l][y - l] == markers[x + l + 1][y - l - 1] == markers[x + l + 2][y - l - 2] == markers[x + l + 3][y - l - 3] == markers[x + l + 4][y - l - 4] == 1:
-            pygame.draw.line(screen, green, ((x + l) * 30, (y - l + 1) * 30), ((x + r) * 30, (y - r + 1) * 30), line_width + 3)
-            return 2
-        if x + r <= 19 and y - r >= 0 and x + l >= 1 and y - l <= 18 and markers[x + l][y - l] == markers[x + l + 1][y - l - 1] == markers[x + l + 2][y - l - 2] == markers[x + l + 3][y - l - 3] == markers[x + l + 4][y - l - 4] == 2:
-            pygame.draw.line(screen, blue, ((x + l) * 30, (y - l + 1) * 30), ((x + r) * 30, (y - r + 1) * 30), line_width + 3)
-            return 3
-        l -= 1
-        r -= 1
-    # Nếu đánh hết bàn cờ mà chưa có người thắng thì là hòa
-    if cnt == 18 * 18:
-        return 0
-    # Nếu chưa đánh hết thì chưa có người thắng
-    return None
-
+#Vẽ người thắng
 def draw_winner():
     if winner == 1:
         win_text = "Player 1 won"
@@ -173,19 +123,94 @@ def draw_winner():
         win_text = "Draw"
     win_img = font.render(win_text, True, white)
     if winner == 1:
-        pygame.draw.rect(screen, red, (screen_width // 2 - 150, screen_height // 2 - 50, 300, 50))
+        screen.blit(red_rect, (screen_width // 2 - 150, screen_height // 2 - 50))
     elif winner == 2:
-        pygame.draw.rect(screen, green, (screen_width // 2 - 150, screen_height // 2 - 50, 300, 50))
+        screen.blit(green_rect, (screen_width // 2 - 150, screen_height // 2 - 50))
     elif winner == 3:
-        pygame.draw.rect(screen, blue, (screen_width // 2 - 150, screen_height // 2 - 50, 300, 50))
+        screen.blit(blue_rect, (screen_width // 2 - 150, screen_height // 2 - 50))
     else:
         pygame.draw.rect(screen, yellow, (screen_width // 2 - 150, screen_height // 2 - 50, 300, 50))
     screen.blit(win_img, (screen_width // 2 - 125, screen_height // 2 - 50))
         
     again_text = "Play again?"
     again_img = font.render(again_text, True, white)
-    pygame.draw.rect(screen, blue, again_rect)
+    screen.blit(blue_rect, (screen_width // 2 - 150, screen_height // 2 + 10))
     screen.blit(again_img, (screen_width // 2 - 110, screen_height // 2 + 10))
+#Kiểm tra người thắng
+def check_winner(x, y, cnt):
+    # Check hàng ngang
+    l, r = 0, 5
+    while l >= -4 and r >= 1:
+        if x + r <= 19 and x + l >= 1 and markers[x + l][y] == markers[x + l + 1][y] == markers[x + l + 2][y] == markers[x + l + 3][y] == markers[x + l + 4][y] == 0:
+            for i in range(l, r):
+                screen.blit(red_surface,((x + i) * 30, y * 30))
+            return 1
+        if x + r <= 19 and x + l >= 1 and markers[x + l][y] == markers[x + l + 1][y] == markers[x + l + 2][y] == markers[x + l + 3][y] == markers[x + l + 4][y] == 1:
+            for i in range(l, r):
+                screen.blit(green_surface,((x + i) * 30, y * 30))
+            return 2
+        if x + r <= 19 and x + l >= 1 and markers[x + l][y] == markers[x + l + 1][y] == markers[x + l + 2][y] == markers[x + l + 3][y] == markers[x + l + 4][y] == 2:
+            for i in range(l, r):
+                screen.blit(blue_surface,((x + i) * 30, y * 30))
+            return 3
+        l -= 1
+        r -= 1
+    #Check hàng dọc
+    l, r = 0, 5
+    while l >= -4 and r >= 1:
+        if y + r <= 19 and y + l >= 1 and markers[x][y + l] == markers[x][y + l + 1] == markers[x][y + l + 2] == markers[x][y + l + 3] == markers[x][y + l + 4] == 0:
+            for i in range(l, r):
+                screen.blit(red_surface,(x * 30, (y + i) * 30))
+            return 1
+        if y + r <= 19 and y + l >= 1 and markers[x][y + l] == markers[x][y + l + 1] == markers[x][y + l + 2] == markers[x][y + l + 3] == markers[x][y + l + 4] == 1:
+            for i in range(l, r):
+                screen.blit(green_surface,(x * 30, (y + i) * 30))
+            return 2
+        if y + r <= 19 and y + l >= 1 and markers[x][y + l] == markers[x][y + l + 1] == markers[x][y + l + 2] == markers[x][y + l + 3] == markers[x][y + l + 4] == 2:
+            for i in range(l, r):
+                screen.blit(blue_surface,(x * 30, (y + i) * 30))
+            return 3
+        l -= 1
+        r -= 1
+    #Check hàng chéo góc phần tư thứ II và IV
+    l, r = 0, 5
+    while l >= -4 and r >= 1:
+        if x + r <= 19 and y + r <= 19 and x + l >= 1 and y + l >= 1 and markers[x + l][y + l] == markers[x + l + 1][y + l + 1] == markers[x + l + 2][y + l + 2] == markers[x + l + 3][y + l + 3] == markers[x + l + 4][y + l + 4] == 0:
+            for i in range(l, r):
+                screen.blit(red_surface, ((x + i) * 30, (y + i) * 30))
+            return 1
+        if x + r <= 19 and y + r <= 19 and x + l >= 1 and y + l >= 1 and markers[x + l][y + l] == markers[x + l + 1][y + l + 1] == markers[x + l + 2][y + l + 2] == markers[x + l + 3][y + l + 3] == markers[x + l + 4][y + l + 4] == 1:
+            for i in range(l, r):
+                screen.blit(green_surface, ((x + i) * 30, (y + i) * 30))
+            return 2
+        if x + r <= 19 and y + r <= 19 and x + l >= 1 and y + l >= 1 and markers[x + l][y + l] == markers[x + l + 1][y + l + 1] == markers[x + l + 2][y + l + 2] == markers[x + l + 3][y + l + 3] == markers[x + l + 4][y + l + 4] == 2:
+            for i in range(l, r):
+                screen.blit(blue_surface, ((x + i) * 30, (y + i) * 30))
+            return 3
+        l -= 1
+        r -= 1
+    #Check chéo góc phần tư thứ I và III
+    l, r = 0, 5
+    while l >= -4 and r >= 1:
+        if x + r <= 19 and y - r >= 0 and x + l >= 1 and y - l <= 18 and markers[x + l][y - l] == markers[x + l + 1][y - l - 1] == markers[x + l + 2][y - l - 2] == markers[x + l + 3][y - l - 3] == markers[x + l + 4][y - l - 4] == 0:
+            for i in range(l, r):
+                screen.blit(red_surface, ((x + i) * 30, (y - i) * 30))
+            return 1
+        if x + r <= 19 and y - r >= 0 and x + l >= 1 and y - l <= 18 and markers[x + l][y - l] == markers[x + l + 1][y - l - 1] == markers[x + l + 2][y - l - 2] == markers[x + l + 3][y - l - 3] == markers[x + l + 4][y - l - 4] == 1:
+            for i in range(l, r):
+                screen.blit(green_surface, ((x + i) * 30, (y - i) * 30))
+            return 2
+        if x + r <= 19 and y - r >= 0 and x + l >= 1 and y - l <= 18 and markers[x + l][y - l] == markers[x + l + 1][y - l - 1] == markers[x + l + 2][y - l - 2] == markers[x + l + 3][y - l - 3] == markers[x + l + 4][y - l - 4] == 2:
+            for i in range(l, r):
+                screen.blit(blue_surface, ((x + i) * 30, (y - i) * 30))
+            return 3
+        l -= 1
+        r -= 1
+    # Nếu đánh hết bàn cờ mà chưa có người thắng thì là hòa
+    if cnt == 18 * 18:
+        return 0
+    # Nếu chưa đánh hết thì chưa có người thắng
+    return None
 
 # Khởi tạo lại trò chơi
 def restart():
