@@ -110,16 +110,25 @@ def draw_markers():
     for x in range(1, 19):
         for y in range(1, 19):
             if markers[x][y] == 0:
+                # pygame.draw.line(screen, red, (x * 30 + 7, y * 30 + 7), ((x + 1) * 30 - 7, (y + 1) * 30 - 7), line_width + 2)
+                # pygame.draw.line(screen, red, (x * 30 + 7, (y + 1) * 30 - 7), ((x + 1) * 30 - 7, y * 30 + 7), line_width + 2)
                 screen.blit(x_marker, (x * 30 + 3, y * 30 + 3))
             if markers[x][y] == 1:
+                # center_x = x * 30 + 15
+                # center_y = y * 30 + 15
+                # pygame.draw.circle(screen, green, (center_x + 0.75, center_y + 0.75), 10, line_width + 2)
                 screen.blit(o_marker, (x * 30 + 3, y * 30 + 3))
             if markers[x][y] == 2:
+                # pygame.draw.line(screen, blue, (x * 30 + 7, (y + 1) * 30 - 7), ((x + 1) * 30 - 7, y * 30 + 7), line_width + 2)
                 screen.blit(l_marker, (x * 30 + 3, y * 30 + 3))
 #Vẽ O cho chế độ cờ mù
 def draw_markers3():            
     for x in range(1, 19):
         for y in range(1, 19):
             if markers[x][y] != -1:
+                # center_x = x * 30 + 15
+                # center_y = y * 30 + 15
+                # pygame.draw.circle(screen, yellow, (center_x + 0.75, center_y + 0.75), 10, line_width + 2)
                 screen.blit(xx_marker, (x * 30 + 3, y * 30 + 3))
 #Vẽ người thắng
 def draw_winner():
@@ -366,7 +375,11 @@ while run:
             pos = pygame.mouse.get_pos()
             if again_rect.collidepoint(pos):
                 restart()
-
+            if menu_rect.collidepoint(pos): #Nếu click vào ô menu thì sẽ quay trở lại menu
+                restart()
+                screen.fill(black)
+                draw_menu()
+                mode = None
     pygame.display.update()
 
 pygame.quit()
