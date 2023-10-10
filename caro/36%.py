@@ -11,6 +11,11 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption('TicTacToe')
 movement_sound0 = pygame.mixer.Sound('sound\\tic.wav')
 movement_sound1 = pygame.mixer.Sound('sound\\ticc.wav')
+x_marker = pygame.image.load('assets\\x.png')
+o_marker = pygame.image.load('assets\\o.png')
+l_marker = pygame.image.load('assets\\1.png')
+xx_marker = pygame.image.load('assets\\xx.png')
+menu_background = pygame.image.load('assets\\menu_background.jpg')
 
 markers = [[-1 for _ in range(20)] for _ in range(20)]  #Lưu các ô đã được đánh dấu X và O
 clicked = False  #Kiểm tra xem đã click hay chưa
@@ -19,6 +24,8 @@ winner = None
 game_over = False
 cnt = 0    #Đếm xem bao nhiêu ô đã được đánh dấu
 mode = None
+x = None
+y = None
 
 #Đĩnh nghĩa màu và font chữ
 blue = (53, 126, 242, 120)
@@ -28,17 +35,22 @@ gray = (186, 184, 179, 120)
 white = (255, 255, 255, 120)
 black = (0, 0, 0, 120)
 yellow = (209, 201, 42, 120)
-font = pygame.font.SysFont("monotype", 35)
-font1 = pygame.font.SysFont(None, 40)
+pink = (235, 19, 199, 120)
+gray = (180, 185, 194, 120)
+font = pygame.font.SysFont("VCR OSD Mono", 35)
+font1 = pygame.font.SysFont("VCR OSD Mono", 45)
+font2 = pygame.font.SysFont("VCR OSD Mono", 25)
 
 #Hình vuông đánh lại
 again_rect = pygame.Rect(screen_width // 2 - 150, screen_height // 2 + 10, 300, 50)
-menu_rect = pygame.Rect(250, 0, 100, 27)
+menu_rect = pygame.Rect(250, 0, 80, 27)
 mode_rect = pygame.Rect(100, 50, 400, 50)
-mode_rect1 = pygame.Rect(100, 200, 400, 50)
-mode_rect2 = pygame.Rect(100, 300, 400, 50)
+mode_rect1 = pygame.Rect(80, 200, 440, 50)
+mode_rect2 = pygame.Rect(80, 300, 440, 50)
 mode_rect3 = pygame.Rect(80, 400, 440, 50)
 
+gray_surface = pygame.Surface((30, 30), pygame.SRCALPHA)
+pygame.draw.rect(gray_surface, gray, (0, 0, 30, 30))
 red_surface = pygame.Surface((30, 30), pygame.SRCALPHA)
 pygame.draw.rect(red_surface, red, (0, 0, 30, 30))
 green_surface = pygame.Surface((30, 30), pygame.SRCALPHA)
@@ -55,29 +67,30 @@ black_rect = pygame.Surface((300, 50), pygame.SRCALPHA)
 pygame.draw.rect(black_rect, (0, 0, 0, 200), (0, 0, 300, 50))
 
 def draw_menu():
-    pygame.draw.rect(screen, white, mode_rect)
+    screen.blit(menu_background, (0, 0))
     text = "SELECT MODE"
-    text_img = font1.render(text, True, black)
-    screen.blit(text_img, (200, 60))
-    pygame.draw.rect(screen, white, mode_rect1)
+    text_img = font1.render(text, True, white)
+    screen.blit(text_img, (157, 64))
 
+    pygame.draw.rect(screen, white, mode_rect1)
     text = "2 PLAYERS"
     text_img = font.render(text, True, black)
-    screen.blit(text_img, (200, 205))
-    pygame.draw.rect(screen, white, mode_rect2)
+    screen.blit(text_img, (200, 210))
 
+    pygame.draw.rect(screen, white, mode_rect2)
     text = "3 PLAYERS"
     text_img = font.render(text, True, black)
-    screen.blit(text_img, (200, 305))
-    pygame.draw.rect(screen, white, mode_rect3)
+    screen.blit(text_img, (200, 310))
 
+    pygame.draw.rect(screen, white, mode_rect3)
     text = "BLIND TIC TAC TOE"
     text_img = font.render(text, True, black)
-    screen.blit(text_img, (120, 405))
+    screen.blit(text_img, (120, 410))
 
 #Vẽ lưới
 def draw_grid():
-    screen.fill(white)
+    screen.blit(menu_background, (0, 0))
+    pygame.draw.rect(screen, white, (30, 30, 540, 540))
     x = 1
     pygame.draw.line(screen, gray, (30, x * 30), (screen_width - 30, x * 30), line_width + 2)
     pygame.draw.line(screen, gray, (x * 30, 30), (x * 30, screen_height - 30), line_width + 2)
@@ -89,7 +102,7 @@ def draw_grid():
         pygame.draw.line(screen, gray, (x * 30, 30), (x * 30, screen_height - 30), line_width)
     pygame.draw.rect(screen, blue, menu_rect)
     text = "MENU"
-    text_img = font1.render(text, True, black)
+    text_img = font2.render(text, True, white)
     screen.blit(text_img, (262, 2))
 
 #Vẽ X và O    
@@ -97,32 +110,27 @@ def draw_markers():
     for x in range(1, 19):
         for y in range(1, 19):
             if markers[x][y] == 0:
-                pygame.draw.line(screen, red, (x * 30 + 7, y * 30 + 7), ((x + 1) * 30 - 7, (y + 1) * 30 - 7), line_width + 2)
-                pygame.draw.line(screen, red, (x * 30 + 7, (y + 1) * 30 - 7), ((x + 1) * 30 - 7, y * 30 + 7), line_width + 2)
+                screen.blit(x_marker, (x * 30 + 3, y * 30 + 3))
             if markers[x][y] == 1:
-                center_x = x * 30 + 15
-                center_y = y * 30 + 15
-                pygame.draw.circle(screen, green, (center_x + 0.75, center_y + 0.75), 10, line_width + 2)
+                screen.blit(o_marker, (x * 30 + 3, y * 30 + 3))
             if markers[x][y] == 2:
-                pygame.draw.line(screen, blue, (x * 30 + 7, (y + 1) * 30 - 7), ((x + 1) * 30 - 7, y * 30 + 7), line_width + 2)
+                screen.blit(l_marker, (x * 30 + 3, y * 30 + 3))
 #Vẽ O cho chế độ cờ mù
 def draw_markers3():            
     for x in range(1, 19):
         for y in range(1, 19):
             if markers[x][y] != -1:
-                center_x = x * 30 + 15
-                center_y = y * 30 + 15
-                pygame.draw.circle(screen, yellow, (center_x + 0.75, center_y + 0.75), 10, line_width + 2)
+                screen.blit(xx_marker, (x * 30 + 3, y * 30 + 3))
 #Vẽ người thắng
 def draw_winner():
     if winner == 1:
-        win_text = "Player 1 won"
+        win_text = "PLAYER 1 WON!"
     elif winner == 2:
-        win_text = "Player 2 won"
+        win_text = "PLAYER 2 WON!"
     elif winner == 3:
-        win_text = "Player 3 won"
+        win_text = "PLAYER 3 WON!"
     else:
-        win_text = "Draw"
+        win_text = "DRAW"
     win_img = font.render(win_text, True, white)
     if winner == 1:
         screen.blit(red_rect, (screen_width // 2 - 150, screen_height // 2 - 50))
@@ -133,13 +141,13 @@ def draw_winner():
     else:
         pygame.draw.rect(screen, yellow, (screen_width // 2 - 150, screen_height // 2 - 50, 300, 50))
     if winner != 0:
-        screen.blit(win_img, (screen_width // 2 - 125, screen_height // 2 - 45))
+        screen.blit(win_img, (screen_width // 2 - 125, screen_height // 2 - 40))
     else:
         screen.blit(win_img, (screen_width // 2 - 30, screen_height // 2 - 45))    
-    again_text = "Play again?"
+    again_text = "PLAY AGAIN?"
     again_img = font.render(again_text, True, white)
     screen.blit(black_rect, (screen_width // 2 - 150, screen_height // 2 + 10))
-    screen.blit(again_img, (screen_width // 2 - 110, screen_height // 2 + 12))
+    screen.blit(again_img, (screen_width // 2 - 110, screen_height // 2 + 20))
 #Kiểm tra người thắng
 def check_winner(x, y, cnt):
     # Check hàng ngang
@@ -218,26 +226,32 @@ def check_winner(x, y, cnt):
 
 # Khởi tạo lại trò chơi
 def restart():
-    global markers, player, winner, game_over, cnt
+    global markers, player, winner, game_over, cnt, x, y
     markers = [[-1 for _ in range(20)] for _ in range(20)] 
     player = 0          
     winner = None       
     game_over = False
     cnt = 0
+    x = None
+    y = None
 
 run = True
 
 while run:
-
     if mode == None:
         #Vẽ menu
         draw_menu()
     elif mode == 1 or mode == 2:
         draw_grid()
-        draw_markers()
+        if x != None and y != None:
+            screen.blit(gray_surface, (x * 30, y * 30))
+            draw_markers()
+
     elif mode == 3:
         draw_grid()
-        draw_markers3()
+        if x != None and y != None:
+            screen.blit(gray_surface, (x * 30, y * 30))
+            draw_markers3()
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -276,6 +290,7 @@ while run:
                             movement_sound0.play()
                         else:                       #Player 2 thì dùng sound1
                             movement_sound1.play()
+                        x, y = cell_x, cell_y
                         cnt += 1
                         markers[cell_x][cell_y] = player    #Gán giá trị của ô cho player 1 hoặc -1
                         player = (player + 1) % 2                        #Đổi người chơi
@@ -303,6 +318,7 @@ while run:
                             movement_sound0.play()
                         else:                       #Player 2, 3 thì dùng sound1
                             movement_sound1.play()
+                        x, y = cell_x, cell_y
                         cnt += 1
                         markers[cell_x][cell_y] = player    #Gán giá trị của ô cho player 1 hoặc -1
                         player = (player + 1) % 3                        #Đổi người chơi
@@ -330,6 +346,7 @@ while run:
                             movement_sound0.play()
                         else:                       #Player 2 thì dùng sound1
                             movement_sound1.play()
+                        x, y = cell_x, cell_y
                         cnt += 1
                         markers[cell_x][cell_y] = player    #Gán giá trị của ô cho player 1 hoặc -1
                         player = (player + 1) % 2                        #Đổi người chơi
