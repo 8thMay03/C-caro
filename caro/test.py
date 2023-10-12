@@ -16,22 +16,13 @@ o_marker = pygame.image.load('assets\\o.png')
 l_marker = pygame.image.load('assets\\1.png')
 xx_marker = pygame.image.load('assets\\xx.png')
 menu_background = pygame.image.load('assets\\menu_background.jpg')
-menu_img = pygame.image.load('assets\\menu.png')
-mode_img = pygame.image.load('assets\\mode.png')
-mode1_img = pygame.image.load('assets\\mode1.png')
-mode11_img = pygame.image.load('assets\\mode11.png')
-mode2_img = pygame.image.load('assets\\mode2.png')
-mode22_img = pygame.image.load('assets\\mode22.png')
-mode3_img = pygame.image.load('assets\\mode3.png')
-mode33_img = pygame.image.load('assets\\mode33.png')
-
 
 markers = [[-1 for _ in range(20)] for _ in range(20)]  #Lưu các ô đã được đánh dấu X và O
 clicked = False  #Kiểm tra xem đã click hay chưa
 player = 0   
 winner = None       
 game_over = False
-cnt = 0   #Đếm xem bao nhiêu ô đã được đánh dấu
+cnt = 0    #Đếm xem bao nhiêu ô đã được đánh dấu
 mode = None
 x = None
 y = None
@@ -43,7 +34,7 @@ red = (255, 0, 0, 120)
 gray = (186, 184, 179, 120)
 white = (255, 255, 255, 120)
 black = (0, 0, 0, 120)
-yellow = (209, 201, 42, 180)
+yellow = (209, 201, 42, 120)
 pink = (235, 19, 199, 120)
 gray = (180, 185, 194, 120)
 font = pygame.font.SysFont("VCR OSD Mono", 35)
@@ -74,33 +65,27 @@ blue_rect = pygame.Surface((300, 50), pygame.SRCALPHA)
 pygame.draw.rect(blue_rect, (53, 126, 242, 200), (0, 0, 300, 50))
 black_rect = pygame.Surface((300, 50), pygame.SRCALPHA)
 pygame.draw.rect(black_rect, (0, 0, 0, 200), (0, 0, 300, 50))
-yellow_rect = pygame.Surface((300, 50), pygame.SRCALPHA)
-pygame.draw.rect(yellow_rect, yellow, (0, 0, 300, 50))
 
 def draw_menu():
     screen.blit(menu_background, (0, 0))
-    # text = "SELECT MODE"
-    # text_img = font1.render(text, True, white)
-    # screen.blit(text_img, (157, 64))
-    screen.blit(mode_img, (70, 64))
+    text = "SELECT MODE"
+    text_img = font1.render(text, True, white)
+    screen.blit(text_img, (157, 64))
 
-    # pygame.draw.rect(screen, white, mode_rect1)
-    # text = "2 PLAYERS"
-    # text_img = font.render(text, True, black)
-    # screen.blit(text_img, (200, 210))
-    screen.blit(mode1_img, (70, 210))
+    pygame.draw.rect(screen, white, mode_rect1)
+    text = "2 PLAYERS"
+    text_img = font.render(text, True, black)
+    screen.blit(text_img, (200, 210))
 
-    # pygame.draw.rect(screen, white, mode_rect2)
-    # text = "3 PLAYERS"
-    # text_img = font.render(text, True, black)
-    # screen.blit(text_img, (200, 310))
-    screen.blit(mode2_img, (70, 310))
+    pygame.draw.rect(screen, white, mode_rect2)
+    text = "3 PLAYERS"
+    text_img = font.render(text, True, black)
+    screen.blit(text_img, (200, 310))
 
-    # pygame.draw.rect(screen, white, mode_rect3)
-    # text = "BLIND TIC TAC TOE"
-    # text_img = font.render(text, True, black)
-    # screen.blit(text_img, (120, 410))
-    screen.blit(mode3_img, (70, 410))
+    pygame.draw.rect(screen, white, mode_rect3)
+    text = "BLIND TIC TAC TOE"
+    text_img = font.render(text, True, black)
+    screen.blit(text_img, (120, 410))
 
 #Vẽ lưới
 def draw_grid():
@@ -115,27 +100,35 @@ def draw_grid():
     for x in range(2, 19):
         pygame.draw.line(screen, gray, (30, x * 30), (screen_width - 30, x * 30), line_width)
         pygame.draw.line(screen, gray, (x * 30, 30), (x * 30, screen_height - 30), line_width)
-    # pygame.draw.rect(screen, blue, menu_rect)
-    # text = "MENU"
-    # text_img = font2.render(text, True, white)
-    # screen.blit(text_img, (262, 2))
-    screen.blit(menu_img, (250, -5))
+    pygame.draw.rect(screen, blue, menu_rect)
+    text = "MENU"
+    text_img = font2.render(text, True, white)
+    screen.blit(text_img, (262, 2))
 
 #Vẽ X và O    
 def draw_markers():
     for x in range(1, 19):
         for y in range(1, 19):
             if markers[x][y] == 0:
+                # pygame.draw.line(screen, red, (x * 30 + 7, y * 30 + 7), ((x + 1) * 30 - 7, (y + 1) * 30 - 7), line_width + 2)
+                # pygame.draw.line(screen, red, (x * 30 + 7, (y + 1) * 30 - 7), ((x + 1) * 30 - 7, y * 30 + 7), line_width + 2)
                 screen.blit(x_marker, (x * 30 + 3, y * 30 + 3))
             if markers[x][y] == 1:
+                # center_x = x * 30 + 15
+                # center_y = y * 30 + 15
+                # pygame.draw.circle(screen, green, (center_x + 0.75, center_y + 0.75), 10, line_width + 2)
                 screen.blit(o_marker, (x * 30 + 3, y * 30 + 3))
             if markers[x][y] == 2:
+                # pygame.draw.line(screen, blue, (x * 30 + 7, (y + 1) * 30 - 7), ((x + 1) * 30 - 7, y * 30 + 7), line_width + 2)
                 screen.blit(l_marker, (x * 30 + 3, y * 30 + 3))
 #Vẽ O cho chế độ cờ mù
 def draw_markers3():            
     for x in range(1, 19):
         for y in range(1, 19):
             if markers[x][y] != -1:
+                # center_x = x * 30 + 15
+                # center_y = y * 30 + 15
+                # pygame.draw.circle(screen, yellow, (center_x + 0.75, center_y + 0.75), 10, line_width + 2)
                 screen.blit(xx_marker, (x * 30 + 3, y * 30 + 3))
 #Vẽ người thắng
 def draw_winner():
@@ -155,11 +148,11 @@ def draw_winner():
     elif winner == 3:
         screen.blit(blue_rect, (screen_width // 2 - 150, screen_height // 2 - 50))
     else:
-        screen.blit(yellow_rect, (screen_width // 2 - 150, screen_height // 2 - 50))
+        pygame.draw.rect(screen, yellow, (screen_width // 2 - 150, screen_height // 2 - 50, 300, 50))
     if winner != 0:
         screen.blit(win_img, (screen_width // 2 - 125, screen_height // 2 - 40))
     else:
-        screen.blit(win_img, (screen_width // 2 - 40, screen_height // 2 - 45))    
+        screen.blit(win_img, (screen_width // 2 - 30, screen_height // 2 - 45))    
     again_text = "PLAY AGAIN?"
     again_img = font.render(again_text, True, white)
     screen.blit(black_rect, (screen_width // 2 - 150, screen_height // 2 + 10))
@@ -275,7 +268,6 @@ while run:
         if mode == None:
             if event.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[0] == 1 and clicked == False:
                 clicked = True
-                
             if event.type == pygame.MOUSEBUTTONUP  and clicked == True:
                 clicked = False
                 pos = pygame.mouse.get_pos()
@@ -288,7 +280,6 @@ while run:
         else:
             if mode == 1:
                 if winner == None:
-                    pos = pygame.mouse.get_pos()
                     if event.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[0] == 1 and clicked == False: #Nếu click chuột trái thì mới được tính là đã click
                         clicked = True
                     if event.type == pygame.MOUSEBUTTONUP  and clicked == True:
@@ -296,6 +287,8 @@ while run:
                         pos = pygame.mouse.get_pos()
                         if menu_rect.collidepoint(pos): #Nếu click vào ô menu thì sẽ quay trở lại menu
                             restart()
+                            screen.fill(black)
+                            draw_menu()
                             mode = None
                             continue
                         cell_x = pos[0] // 30
@@ -307,7 +300,6 @@ while run:
                         else:                       #Player 2 thì dùng sound1
                             movement_sound1.play()
                         x, y = cell_x, cell_y
-                        
                         cnt += 1
                         markers[cell_x][cell_y] = player    #Gán giá trị của ô cho player 1 hoặc -1
                         player = (player + 1) % 2                        #Đổi người chơi
@@ -323,6 +315,8 @@ while run:
                         pos = pygame.mouse.get_pos()
                         if menu_rect.collidepoint(pos): #Nếu click vào ô menu thì sẽ quay trở lại menu
                             restart()
+                            screen.fill(black)
+                            draw_menu()
                             mode = None
                             continue
                         cell_x = pos[0] // 30
@@ -349,6 +343,8 @@ while run:
                         pos = pygame.mouse.get_pos()
                         if menu_rect.collidepoint(pos): #Nếu click vào ô menu thì sẽ quay trở lại menu
                             restart()
+                            screen.fill(black)
+                            draw_menu()
                             mode = None
                             continue
                         cell_x = pos[0] // 30
@@ -379,10 +375,7 @@ while run:
             pos = pygame.mouse.get_pos()
             if again_rect.collidepoint(pos):
                 restart()
-            if menu_rect.collidepoint(pos): #Nếu click vào ô menu thì sẽ quay trở lại menu
-                restart()
-                screen.fill(black)
-                mode = None
+
     pygame.display.update()
 
 pygame.quit()
