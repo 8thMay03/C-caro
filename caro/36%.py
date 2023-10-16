@@ -1,5 +1,4 @@
 import pygame
-import random
 
 pygame.init()
 
@@ -33,6 +32,8 @@ player1_won_img = pygame.image.load('assets\\player1_won.png')
 player2_won_img = pygame.image.load('assets\\player2_won.png')
 player3_won_img = pygame.image.load('assets\\player3_won.png')
 draw_img = pygame.image.load('assets\\draw.png')
+play_gain_img = pygame.image.load('assets\\play_again.png')
+play_gain_hover_img = pygame.image.load('assets\\play_again_hover.png')
 
 
 markers = [[-1 for _ in range(20)] for _ in range(20)]  #Lưu các ô đã được đánh dấu X và O
@@ -44,6 +45,7 @@ cnt = 0   #Đếm xem bao nhiêu ô đã được đánh dấu
 mode = None
 x = None
 y = None
+isPlaysound = False
 
 #Đĩnh nghĩa màu và font chữ
 blue = (53, 126, 242, 120)
@@ -63,9 +65,9 @@ font2 = pygame.font.SysFont("VCR OSD Mono", 25)
 again_rect = pygame.Rect(screen_width // 2 - 150, screen_height // 2 + 10, 300, 50)
 menu_rect = pygame.Rect(250, 0, 80, 27)
 mode_rect = pygame.Rect(100, 50, 400, 50)
-mode_rect1 = pygame.Rect(80, 200, 440, 50)
-mode_rect2 = pygame.Rect(80, 300, 440, 50)
-mode_rect3 = pygame.Rect(80, 400, 440, 50)
+mode1_rect = pygame.Rect(80, 200, 440, 50)
+mode2_rect = pygame.Rect(80, 300, 440, 50)
+mode3_rect = pygame.Rect(80, 400, 440, 50)
 
 gray_surface = pygame.Surface((30, 30), pygame.SRCALPHA)
 pygame.draw.rect(gray_surface, gray, (0, 0, 30, 30))
@@ -75,38 +77,48 @@ green_surface = pygame.Surface((30, 30), pygame.SRCALPHA)
 pygame.draw.rect(green_surface, green, (0, 0, 30, 30))
 blue_surface = pygame.Surface((30, 30), pygame.SRCALPHA)
 pygame.draw.rect(blue_surface, blue, (0, 0, 30, 30))
-red_rect = pygame.Surface((300, 50), pygame.SRCALPHA)
-pygame.draw.rect(red_rect, (255, 0, 0, 200), (0, 0, 300, 50))
-green_rect = pygame.Surface((300, 50), pygame.SRCALPHA)
-pygame.draw.rect(green_rect, (32, 230, 38, 200), (0, 0, 300, 50))
-blue_rect = pygame.Surface((300, 50), pygame.SRCALPHA)
-pygame.draw.rect(blue_rect, (53, 126, 242, 200), (0, 0, 300, 50))
-black_rect = pygame.Surface((300, 50), pygame.SRCALPHA)
-pygame.draw.rect(black_rect, (0, 0, 0, 200), (0, 0, 300, 50))
-yellow_rect = pygame.Surface((300, 50), pygame.SRCALPHA)
-pygame.draw.rect(yellow_rect, yellow, (0, 0, 300, 50))
+
 
 def draw_menu():
+    global isPlaysound
     screen.blit(menu_background, (0, 0))
     screen.blit(mode_img, (70, 64))
-    cur = pygame.mouse.get_pos()
-    if 70 + 458 > cur[0] > 70 and 210 + 60 > cur[1] > 210:
-        screen.blit(mode11_img, (70, 215))
+    pos = pygame.mouse.get_pos()
+    if 80 <= pos[0] <= 520 and 200 <= pos[1] <= 250:
+        screen.blit(mode11_img, (80, 205))
+        if not isPlaysound:
+            hover_sound.play()
+            isPlaysound = True 
     else:
-        screen.blit(mode1_img, (70, 210))
+        screen.blit(mode1_img, (80, 200))
 
-    if 70 + 458 > cur[0] > 70 and 310 + 60 > cur[1] > 310:
-        screen.blit(mode22_img, (70, 315))
+    if not mode1_rect.collidepoint(pos) and not mode2_rect.collidepoint(pos) and not mode3_rect.collidepoint(pos):
+        isPlaysound = False
+    
+    if 80 <= pos[0] <= 520 and 300 <= pos[1] <= 350:
+        screen.blit(mode22_img, (80, 305))
+        if not isPlaysound:
+            hover_sound.play()
+            isPlaysound = True 
     else:
-        screen.blit(mode2_img, (70, 310))
+        screen.blit(mode2_img, (80, 300))
 
-    if 70 + 458 > cur[0] > 70 and 410 + 60 > cur[1] > 410:
-        screen.blit(mode33_img, (70, 415))
+    if not mode1_rect.collidepoint(pos) and not mode2_rect.collidepoint(pos) and not mode3_rect.collidepoint(pos):
+        isPlaysound = False
+    
+    if 80 <= pos[0] <= 520 and 400 <= pos[1] <= 450:
+        screen.blit(mode33_img, (80, 405))
+        if not isPlaysound:
+            hover_sound.play()
+            isPlaysound = True 
     else:
-        screen.blit(mode3_img, (70, 410))
+        screen.blit(mode3_img, (80, 400))
 
+    if not mode1_rect.collidepoint(pos) and not mode2_rect.collidepoint(pos) and not mode3_rect.collidepoint(pos):
+        isPlaysound = False
 #Vẽ lưới
 def draw_grid():
+    global isPlaysound
     screen.blit(menu_background, (0, 0))
     pygame.draw.rect(screen, white, (30, 30, 540, 540))
     x = 1
@@ -119,11 +131,16 @@ def draw_grid():
         pygame.draw.line(screen, gray, (30, x * 30), (screen_width - 30, x * 30), line_width)
         pygame.draw.line(screen, gray, (x * 30, 30), (x * 30, screen_height - 30), line_width)
 
-    cur = pygame.mouse.get_pos()
-    if 250 + 93 > cur[0] > 250 and -5 + 39 > cur[1] > -5:
+    pos = pygame.mouse.get_pos()
+    if 250 <= pos[0] <= 330 and 0 <= pos[1] <= 27:
         screen.blit(menuu_img, (250, -5))
+        if not isPlaysound:
+            hover_sound.play()
+            isPlaysound = True 
     else:
         screen.blit(menu_img, (250, -5))
+    if not again_rect.collidepoint(pos) and not menu_rect.collidepoint(pos):
+        isPlaysound = False
 
 #Vẽ X và O    
 def draw_markers():
@@ -143,6 +160,7 @@ def draw_markers3():
                 screen.blit(xx_marker, (x * 30 + 3, y * 30 + 3))
 #Vẽ người thắng
 def draw_winner():
+    global isPlaysound
     if winner == 1:
         screen.blit(player1_won_img,(screen_width // 2 - 150, screen_height // 2 - 50))
     elif winner == 2:
@@ -151,10 +169,17 @@ def draw_winner():
         screen.blit(player3_won_img,(screen_width // 2 - 150, screen_height // 2 - 50))
     else:
         screen.blit(draw_img,(screen_width // 2 - 150, screen_height // 2 - 50)) 
-    again_text = "PLAY AGAIN?"
-    again_img = font.render(again_text, True, white)
-    screen.blit(black_rect, (screen_width // 2 - 150, screen_height // 2 + 10))
-    screen.blit(again_img, (screen_width // 2 - 110, screen_height // 2 + 20))
+    pos = pygame.mouse.get_pos()
+    if 150 <= pos[0] <= 450 and 310 <= pos[1] <= 360:
+        screen.blit(play_gain_hover_img, (150, 310)) 
+        if not isPlaysound:
+            hover_sound.play()
+            isPlaysound = True
+    else:
+        screen.blit(play_gain_img, (150, 310))
+
+    if not again_rect.collidepoint(pos) and not menu_rect.collidepoint(pos):
+        isPlaysound = False
 #Kiểm tra người thắng
 def check_winner(x, y, cnt):
     # Check hàng ngang
@@ -270,11 +295,11 @@ while run:
             if event.type == pygame.MOUSEBUTTONUP  and clicked == True:
                 clicked = False
                 pos = pygame.mouse.get_pos()
-                if mode_rect1.collidepoint(pos):
+                if mode1_rect.collidepoint(pos):
                     mode = 1
-                if mode_rect2.collidepoint(pos):
+                if mode2_rect.collidepoint(pos):
                     mode = 2
-                if mode_rect3.collidepoint(pos):
+                if mode3_rect.collidepoint(pos):
                     mode = 3
         else:
             if mode == 1:
@@ -297,14 +322,14 @@ while run:
                             movement_sound0.play()
                         else:                       #Player 2 thì dùng sound1
                             movement_sound1.play()
-                        x, y = cell_x, cell_y
-                        
+                        x, y = cell_x, cell_y                           
                         cnt += 1
                         markers[cell_x][cell_y] = player    #Gán giá trị của ô cho player 1 hoặc -1
                         player = (player + 1) % 2                        #Đổi người chơi
                         winner = check_winner(cell_x, cell_y, cnt)
                         if winner != None:
                             game_over = True
+
             if mode == 2:
                 if winner == None:
                     if event.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[0] == 1 and clicked == False: #Nếu click chuột trái thì mới được tính là đã click
