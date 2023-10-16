@@ -23,11 +23,11 @@ menu_img = pygame.image.load('assets\\menu.png')
 menuu_img = pygame.image.load('assets\\menuu.png')
 mode_img = pygame.image.load('assets\\mode.png')
 mode1_img = pygame.image.load('assets\\mode1.png')
-mode11_img = pygame.image.load('assets\\mode11.png')
+mode1_hover = pygame.image.load('assets\\mode11.png')
 mode2_img = pygame.image.load('assets\\mode2.png')
-mode22_img = pygame.image.load('assets\\mode22.png')
+mode2_hover = pygame.image.load('assets\\mode22.png')
 mode3_img = pygame.image.load('assets\\mode3.png')
-mode33_img = pygame.image.load('assets\\mode33.png')
+mode3_hover = pygame.image.load('assets\\mode33.png')
 player1_won_img = pygame.image.load('assets\\player1_won.png')
 player2_won_img = pygame.image.load('assets\\player2_won.png')
 player3_won_img = pygame.image.load('assets\\player3_won.png')
@@ -45,7 +45,7 @@ cnt = 0   #Đếm xem bao nhiêu ô đã được đánh dấu
 mode = None
 x = None
 y = None
-isPlaysound = False
+isPlayingSound = False
 
 #Đĩnh nghĩa màu và font chữ
 blue = (53, 126, 242, 120)
@@ -80,45 +80,46 @@ pygame.draw.rect(blue_surface, blue, (0, 0, 30, 30))
 
 
 def draw_menu():
-    global isPlaysound
+    global isPlayingSound
     screen.blit(menu_background, (0, 0))
-    screen.blit(mode_img, (70, 64))
+    screen.blit(mode_img, (77, 64))
     pos = pygame.mouse.get_pos()
-    if 80 <= pos[0] <= 520 and 200 <= pos[1] <= 250:
-        screen.blit(mode11_img, (80, 205))
-        if not isPlaysound:
+
+    if mode1_rect.collidepoint(pos):
+        screen.blit(mode1_hover, (80, 205))
+        if not isPlayingSound:
             hover_sound.play()
-            isPlaysound = True 
+            isPlayingSound = True 
     else:
+        if not mode2_rect.collidepoint(pos) and not mode3_rect.collidepoint(pos):
+            isPlayingSound = False
         screen.blit(mode1_img, (80, 200))
 
-    if not mode1_rect.collidepoint(pos) and not mode2_rect.collidepoint(pos) and not mode3_rect.collidepoint(pos):
-        isPlaysound = False
+    # if not mode1_rect.collidepoint(pos) and not mode2_rect.collidepoint(pos) and not mode3_rect.collidepoint(pos):
+    #     isPlayingSound = False
     
-    if 80 <= pos[0] <= 520 and 300 <= pos[1] <= 350:
-        screen.blit(mode22_img, (80, 305))
-        if not isPlaysound:
+    if mode2_rect.collidepoint(pos):
+        screen.blit(mode2_hover, (80, 305))
+        if not isPlayingSound:
             hover_sound.play()
-            isPlaysound = True 
+            isPlayingSound = True 
     else:
+        if not mode1_rect.collidepoint(pos) and not mode3_rect.collidepoint(pos):
+            isPlayingSound = False
         screen.blit(mode2_img, (80, 300))
-
-    if not mode1_rect.collidepoint(pos) and not mode2_rect.collidepoint(pos) and not mode3_rect.collidepoint(pos):
-        isPlaysound = False
     
-    if 80 <= pos[0] <= 520 and 400 <= pos[1] <= 450:
-        screen.blit(mode33_img, (80, 405))
-        if not isPlaysound:
+    if mode3_rect.collidepoint(pos):
+        screen.blit(mode3_hover, (80, 405))
+        if not isPlayingSound:
             hover_sound.play()
-            isPlaysound = True 
+            isPlayingSound = True 
     else:
+        if not mode1_rect.collidepoint(pos) and not mode2_rect.collidepoint(pos):
+            isPlayingSound = False
         screen.blit(mode3_img, (80, 400))
-
-    if not mode1_rect.collidepoint(pos) and not mode2_rect.collidepoint(pos) and not mode3_rect.collidepoint(pos):
-        isPlaysound = False
 #Vẽ lưới
 def draw_grid():
-    global isPlaysound
+    global isPlayingSound
     screen.blit(menu_background, (0, 0))
     pygame.draw.rect(screen, white, (30, 30, 540, 540))
     x = 1
@@ -132,15 +133,16 @@ def draw_grid():
         pygame.draw.line(screen, gray, (x * 30, 30), (x * 30, screen_height - 30), line_width)
 
     pos = pygame.mouse.get_pos()
-    if 250 <= pos[0] <= 330 and 0 <= pos[1] <= 27:
+    if menu_rect.collidepoint(pos):
         screen.blit(menuu_img, (250, -5))
-        if not isPlaysound:
+        if not isPlayingSound:
             hover_sound.play()
-            isPlaysound = True 
+            isPlayingSound = True 
     else:
+        if not again_rect.collidepoint(pos) and not menu_rect.collidepoint(pos):
+            isPlayingSound = False
         screen.blit(menu_img, (250, -5))
-    if not again_rect.collidepoint(pos) and not menu_rect.collidepoint(pos):
-        isPlaysound = False
+    
 
 #Vẽ X và O    
 def draw_markers():
@@ -160,7 +162,7 @@ def draw_markers3():
                 screen.blit(xx_marker, (x * 30 + 3, y * 30 + 3))
 #Vẽ người thắng
 def draw_winner():
-    global isPlaysound
+    global isPlayingSound
     if winner == 1:
         screen.blit(player1_won_img,(screen_width // 2 - 150, screen_height // 2 - 50))
     elif winner == 2:
@@ -170,16 +172,16 @@ def draw_winner():
     else:
         screen.blit(draw_img,(screen_width // 2 - 150, screen_height // 2 - 50)) 
     pos = pygame.mouse.get_pos()
-    if 150 <= pos[0] <= 450 and 310 <= pos[1] <= 360:
-        screen.blit(play_gain_hover_img, (150, 310)) 
-        if not isPlaysound:
+    if again_rect.collidepoint(pos):
+        screen.blit(play_gain_hover_img, (150, 315)) 
+        if not isPlayingSound:
             hover_sound.play()
-            isPlaysound = True
+            isPlayingSound = True
     else:
+        if not again_rect.collidepoint(pos) and not menu_rect.collidepoint(pos):
+            isPlayingSound = False
         screen.blit(play_gain_img, (150, 310))
 
-    if not again_rect.collidepoint(pos) and not menu_rect.collidepoint(pos):
-        isPlaysound = False
 #Kiểm tra người thắng
 def check_winner(x, y, cnt):
     # Check hàng ngang
