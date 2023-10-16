@@ -8,15 +8,20 @@ screen_height = 600
 line_width = 1
 
 screen = pygame.display.set_mode((screen_width, screen_height))
-pygame.display.set_caption('TicTacToe')
+pygame.display.set_caption('Cờ Caro')
+
 movement_sound0 = pygame.mixer.Sound('sound\\tic.wav')
 movement_sound1 = pygame.mixer.Sound('sound\\ticc.wav')
+hover_sound = pygame.mixer.Sound('sound\\hover_sound.wav')
+hover_sound.set_volume(0.1)
+
 x_marker = pygame.image.load('assets\\x.png')
 o_marker = pygame.image.load('assets\\o.png')
 l_marker = pygame.image.load('assets\\1.png')
 xx_marker = pygame.image.load('assets\\xx.png')
 menu_background = pygame.image.load('assets\\menu_background.jpg')
 menu_img = pygame.image.load('assets\\menu.png')
+menuu_img = pygame.image.load('assets\\menuu.png')
 mode_img = pygame.image.load('assets\\mode.png')
 mode1_img = pygame.image.load('assets\\mode1.png')
 mode11_img = pygame.image.load('assets\\mode11.png')
@@ -24,6 +29,10 @@ mode2_img = pygame.image.load('assets\\mode2.png')
 mode22_img = pygame.image.load('assets\\mode22.png')
 mode3_img = pygame.image.load('assets\\mode3.png')
 mode33_img = pygame.image.load('assets\\mode33.png')
+player1_won_img = pygame.image.load('assets\\player1_won.png')
+player2_won_img = pygame.image.load('assets\\player2_won.png')
+player3_won_img = pygame.image.load('assets\\player3_won.png')
+draw_img = pygame.image.load('assets\\draw.png')
 
 
 markers = [[-1 for _ in range(20)] for _ in range(20)]  #Lưu các ô đã được đánh dấu X và O
@@ -79,28 +88,22 @@ pygame.draw.rect(yellow_rect, yellow, (0, 0, 300, 50))
 
 def draw_menu():
     screen.blit(menu_background, (0, 0))
-    # text = "SELECT MODE"
-    # text_img = font1.render(text, True, white)
-    # screen.blit(text_img, (157, 64))
     screen.blit(mode_img, (70, 64))
+    cur = pygame.mouse.get_pos()
+    if 70 + 458 > cur[0] > 70 and 210 + 60 > cur[1] > 210:
+        screen.blit(mode11_img, (70, 215))
+    else:
+        screen.blit(mode1_img, (70, 210))
 
-    # pygame.draw.rect(screen, white, mode_rect1)
-    # text = "2 PLAYERS"
-    # text_img = font.render(text, True, black)
-    # screen.blit(text_img, (200, 210))
-    screen.blit(mode1_img, (70, 210))
+    if 70 + 458 > cur[0] > 70 and 310 + 60 > cur[1] > 310:
+        screen.blit(mode22_img, (70, 315))
+    else:
+        screen.blit(mode2_img, (70, 310))
 
-    # pygame.draw.rect(screen, white, mode_rect2)
-    # text = "3 PLAYERS"
-    # text_img = font.render(text, True, black)
-    # screen.blit(text_img, (200, 310))
-    screen.blit(mode2_img, (70, 310))
-
-    # pygame.draw.rect(screen, white, mode_rect3)
-    # text = "BLIND TIC TAC TOE"
-    # text_img = font.render(text, True, black)
-    # screen.blit(text_img, (120, 410))
-    screen.blit(mode3_img, (70, 410))
+    if 70 + 458 > cur[0] > 70 and 410 + 60 > cur[1] > 410:
+        screen.blit(mode33_img, (70, 415))
+    else:
+        screen.blit(mode3_img, (70, 410))
 
 #Vẽ lưới
 def draw_grid():
@@ -115,11 +118,12 @@ def draw_grid():
     for x in range(2, 19):
         pygame.draw.line(screen, gray, (30, x * 30), (screen_width - 30, x * 30), line_width)
         pygame.draw.line(screen, gray, (x * 30, 30), (x * 30, screen_height - 30), line_width)
-    # pygame.draw.rect(screen, blue, menu_rect)
-    # text = "MENU"
-    # text_img = font2.render(text, True, white)
-    # screen.blit(text_img, (262, 2))
-    screen.blit(menu_img, (250, -5))
+
+    cur = pygame.mouse.get_pos()
+    if 250 + 93 > cur[0] > 250 and -5 + 39 > cur[1] > -5:
+        screen.blit(menuu_img, (250, -5))
+    else:
+        screen.blit(menu_img, (250, -5))
 
 #Vẽ X và O    
 def draw_markers():
@@ -140,26 +144,13 @@ def draw_markers3():
 #Vẽ người thắng
 def draw_winner():
     if winner == 1:
-        win_text = "PLAYER 1 WON!"
+        screen.blit(player1_won_img,(screen_width // 2 - 150, screen_height // 2 - 50))
     elif winner == 2:
-        win_text = "PLAYER 2 WON!"
+        screen.blit(player2_won_img,(screen_width // 2 - 150, screen_height // 2 - 50))
     elif winner == 3:
-        win_text = "PLAYER 3 WON!"
+        screen.blit(player3_won_img,(screen_width // 2 - 150, screen_height // 2 - 50))
     else:
-        win_text = "DRAW"
-    win_img = font.render(win_text, True, white)
-    if winner == 1:
-        screen.blit(red_rect, (screen_width // 2 - 150, screen_height // 2 - 50))
-    elif winner == 2:
-        screen.blit(green_rect, (screen_width // 2 - 150, screen_height // 2 - 50))
-    elif winner == 3:
-        screen.blit(blue_rect, (screen_width // 2 - 150, screen_height // 2 - 50))
-    else:
-        screen.blit(yellow_rect, (screen_width // 2 - 150, screen_height // 2 - 50))
-    if winner != 0:
-        screen.blit(win_img, (screen_width // 2 - 125, screen_height // 2 - 40))
-    else:
-        screen.blit(win_img, (screen_width // 2 - 40, screen_height // 2 - 45))    
+        screen.blit(draw_img,(screen_width // 2 - 150, screen_height // 2 - 50)) 
     again_text = "PLAY AGAIN?"
     again_img = font.render(again_text, True, white)
     screen.blit(black_rect, (screen_width // 2 - 150, screen_height // 2 + 10))
