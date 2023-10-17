@@ -271,6 +271,7 @@ def check_winner(x, y, cnt):
     # Nếu chưa đánh hết thì chưa có người thắng
     return None
 
+#Check 6 quân cùng hàng thì thắng
 def check_winner4(x, y, cnt):
     # Check hàng ngang
     l, r = 0, 6  # Thay đổi số quân cần nối là 6
@@ -369,7 +370,7 @@ while run:
     if mode == None:
         #Vẽ menu
         draw_menu()
-    elif mode == 1 or mode == 2:
+    elif mode == 1 or mode == 2 or mode == 4:
         draw_grid()
         if x != None and y != None:
             screen.blit(gray_surface, (x * 30, y * 30))
@@ -380,13 +381,6 @@ while run:
         if x != None and y != None:
             screen.blit(gray_surface, (x * 30, y * 30))
             draw_markers3()
-
-    elif mode == 4:
-        draw_grid()
-        draw_markers()
-        if x != None and y != None :
-            screen.blit(gray_surface, (x * 30, y * 30))
-            draw_markers()
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -487,6 +481,7 @@ while run:
                             game_over = True
             if mode == 4:
                 if winner == None:
+                    #Khi count == 2
                     if count == 2:
                         count = 0
                         player = (player + 1) % 2
@@ -518,36 +513,24 @@ while run:
                         
     
     if game_over == True:
+        draw_grid()
+        draw_markers()
         if mode != 4:
-            draw_grid()
-            draw_markers()
             check_winner(cell_x, cell_y, cnt)
-            draw_winner()
-            if event.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[0] == 1 and clicked == False:
-                clicked = True
-            if event.type == pygame.MOUSEBUTTONUP  and clicked == True:
-                clicked = False
-                pos = pygame.mouse.get_pos()
-                if again_rect.collidepoint(pos):
-                    restart()
-                if menu_rect.collidepoint(pos): #Nếu click vào ô menu thì sẽ quay trở lại menu
-                    restart()
-                    mode = None
         else:
-            draw_grid()
-            draw_markers()
             check_winner4(cell_x, cell_y, cnt)
-            draw_winner()
-            if event.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[0] == 1 and clicked == False:
-                clicked = True
-            if event.type == pygame.MOUSEBUTTONUP  and clicked == True:
-                clicked = False
-                pos = pygame.mouse.get_pos()
-                if again_rect.collidepoint(pos):
-                    restart()
-                if menu_rect.collidepoint(pos): #Nếu click vào ô menu thì sẽ quay trở lại menu
-                    restart()
-                    mode = None
+        draw_winner()
+        if event.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[0] == 1 and clicked == False:
+            clicked = True
+        if event.type == pygame.MOUSEBUTTONUP  and clicked == True:
+            clicked = False
+            pos = pygame.mouse.get_pos()
+            if again_rect.collidepoint(pos):
+                restart()
+            if menu_rect.collidepoint(pos): #Nếu click vào ô menu thì sẽ quay trở lại menu
+                restart()
+                mode = None
+
     pygame.display.update()
 
 pygame.quit()
