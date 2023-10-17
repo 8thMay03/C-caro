@@ -200,15 +200,15 @@ def check_winner(x, y, cnt):
     # Check hàng ngang
     l, r = 0, 5
     while l >= -4 and r >= 1:
-        if x + r <= 19 and x + l >= 1 and markers[x + l][y] == markers[x + l + 1][y] == markers[x + l + 2][y] == markers[x + l + 3][y] == markers[x + l + 4][y] == 0:
+        if x + r <= 19 and x + l >= 1 and all(markers[x + l + i][y] == 0 for i in range(5)):
             for i in range(l, r):
                 screen.blit(red_surface,((x + i) * 30, y * 30))
             return 1
-        if x + r <= 19 and x + l >= 1 and markers[x + l][y] == markers[x + l + 1][y] == markers[x + l + 2][y] == markers[x + l + 3][y] == markers[x + l + 4][y] == 1:
+        if x + r <= 19 and x + l >= 1 and all(markers[x + l + i][y] == 1 for i in range(5)):
             for i in range(l, r):
                 screen.blit(green_surface,((x + i) * 30, y * 30))
             return 2
-        if x + r <= 19 and x + l >= 1 and markers[x + l][y] == markers[x + l + 1][y] == markers[x + l + 2][y] == markers[x + l + 3][y] == markers[x + l + 4][y] == 2:
+        if x + r <= 19 and x + l >= 1 and all(markers[x + l + i][y] == 2 for i in range(5)):
             for i in range(l, r):
                 screen.blit(blue_surface,((x + i) * 30, y * 30))
             return 3
@@ -217,15 +217,15 @@ def check_winner(x, y, cnt):
     #Check hàng dọc
     l, r = 0, 5
     while l >= -4 and r >= 1:
-        if y + r <= 19 and y + l >= 1 and markers[x][y + l] == markers[x][y + l + 1] == markers[x][y + l + 2] == markers[x][y + l + 3] == markers[x][y + l + 4] == 0:
+        if y + r <= 19 and y + l >= 1 and all(markers[x][y + l + i] == 0 for i in range(5)):
             for i in range(l, r):
                 screen.blit(red_surface,(x * 30, (y + i) * 30))
             return 1
-        if y + r <= 19 and y + l >= 1 and markers[x][y + l] == markers[x][y + l + 1] == markers[x][y + l + 2] == markers[x][y + l + 3] == markers[x][y + l + 4] == 1:
+        if y + r <= 19 and y + l >= 1 and all(markers[x][y + l + i] == 1 for i in range(5)):
             for i in range(l, r):
                 screen.blit(green_surface,(x * 30, (y + i) * 30))
             return 2
-        if y + r <= 19 and y + l >= 1 and markers[x][y + l] == markers[x][y + l + 1] == markers[x][y + l + 2] == markers[x][y + l + 3] == markers[x][y + l + 4] == 2:
+        if y + r <= 19 and y + l >= 1 and all(markers[x][y + l + i] == 2 for i in range(5)):
             for i in range(l, r):
                 screen.blit(blue_surface,(x * 30, (y + i) * 30))
             return 3
@@ -234,15 +234,15 @@ def check_winner(x, y, cnt):
     #Check hàng chéo góc phần tư thứ II và IV
     l, r = 0, 5
     while l >= -4 and r >= 1:
-        if x + r <= 19 and y + r <= 19 and x + l >= 1 and y + l >= 1 and markers[x + l][y + l] == markers[x + l + 1][y + l + 1] == markers[x + l + 2][y + l + 2] == markers[x + l + 3][y + l + 3] == markers[x + l + 4][y + l + 4] == 0:
+        if x + r <= 19 and y + r <= 19 and x + l >= 1 and y + l >= 1 and all(markers[x + l + i][y + l + i] == 0 for i in range(5)):
             for i in range(l, r):
                 screen.blit(red_surface, ((x + i) * 30, (y + i) * 30))
             return 1
-        if x + r <= 19 and y + r <= 19 and x + l >= 1 and y + l >= 1 and markers[x + l][y + l] == markers[x + l + 1][y + l + 1] == markers[x + l + 2][y + l + 2] == markers[x + l + 3][y + l + 3] == markers[x + l + 4][y + l + 4] == 1:
+        if x + r <= 19 and y + r <= 19 and x + l >= 1 and y + l >= 1 and all(markers[x + l + i][y + l + i] == 1 for i in range(5)):
             for i in range(l, r):
                 screen.blit(green_surface, ((x + i) * 30, (y + i) * 30))
             return 2
-        if x + r <= 19 and y + r <= 19 and x + l >= 1 and y + l >= 1 and markers[x + l][y + l] == markers[x + l + 1][y + l + 1] == markers[x + l + 2][y + l + 2] == markers[x + l + 3][y + l + 3] == markers[x + l + 4][y + l + 4] == 2:
+        if x + r <= 19 and y + r <= 19 and x + l >= 1 and y + l >= 1 and all(markers[x + l + i][y + l + i] == 2 for i in range(5)):
             for i in range(l, r):
                 screen.blit(blue_surface, ((x + i) * 30, (y + i) * 30))
             return 3
@@ -251,15 +251,15 @@ def check_winner(x, y, cnt):
     #Check chéo góc phần tư thứ I và III
     l, r = 0, 5
     while l >= -4 and r >= 1:
-        if x + r <= 19 and y - r >= 0 and x + l >= 1 and y - l <= 18 and markers[x + l][y - l] == markers[x + l + 1][y - l - 1] == markers[x + l + 2][y - l - 2] == markers[x + l + 3][y - l - 3] == markers[x + l + 4][y - l - 4] == 0:
+        if x + r <= 19 and y - r >= 0 and x + l >= 1 and y - l <= 18 and all(markers[x + l + i][y - l - i] == 0 for i in range(5)):
             for i in range(l, r):
                 screen.blit(red_surface, ((x + i) * 30, (y - i) * 30))
             return 1
-        if x + r <= 19 and y - r >= 0 and x + l >= 1 and y - l <= 18 and markers[x + l][y - l] == markers[x + l + 1][y - l - 1] == markers[x + l + 2][y - l - 2] == markers[x + l + 3][y - l - 3] == markers[x + l + 4][y - l - 4] == 1:
+        if x + r <= 19 and y - r >= 0 and x + l >= 1 and y - l <= 18 and all(markers[x + l + i][y - l - i] == 1 for i in range(5)):
             for i in range(l, r):
                 screen.blit(green_surface, ((x + i) * 30, (y - i) * 30))
             return 2
-        if x + r <= 19 and y - r >= 0 and x + l >= 1 and y - l <= 18 and markers[x + l][y - l] == markers[x + l + 1][y - l - 1] == markers[x + l + 2][y - l - 2] == markers[x + l + 3][y - l - 3] == markers[x + l + 4][y - l - 4] == 2:
+        if x + r <= 19 and y - r >= 0 and x + l >= 1 and y - l <= 18 and all(markers[x + l + i][y - l - i] == 2 for i in range(5)):
             for i in range(l, r):
                 screen.blit(blue_surface, ((x + i) * 30, (y - i) * 30))
             return 3
@@ -271,9 +271,89 @@ def check_winner(x, y, cnt):
     # Nếu chưa đánh hết thì chưa có người thắng
     return None
 
+def check_winner4(x, y, cnt):
+    # Check hàng ngang
+    l, r = 0, 6  # Thay đổi số quân cần nối là 6
+    while l >= -5 and r >= 1:
+        if x + r <= 19 and x + l >= 1 and all(markers[x + l + i][y] == 0 for i in range(6)):
+            for i in range(l, r):
+                screen.blit(red_surface, ((x + i) * 30, y * 30))
+            return 1
+        if x + r <= 19 and x + l >= 1 and all(markers[x + l + i][y] == 1 for i in range(6)):
+            for i in range(l, r):
+                screen.blit(green_surface, ((x + i) * 30, y * 30))
+            return 2
+        if x + r <= 19 and x + l >= 1 and all(markers[x + l + i][y] == 2 for i in range(6)):
+            for i in range(l, r):
+                screen.blit(blue_surface, ((x + i) * 30, y * 30))
+            return 3
+        l -= 1
+        r -= 1
+
+    #Check hàng dọc
+    l, r = 0, 6  # Thay đổi số quân cần nối là 6
+    while l >= -5 and r >= 1:
+        if y + r <= 19 and y + l >= 1 and all(markers[x][y + l + i] == 0 for i in range(6)):
+            for i in range(l, r):
+                screen.blit(red_surface, (x * 30, (y + i) * 30))
+            return 1
+        if y + r <= 19 and y + l >= 1 and all(markers[x][y + l + i] == 1 for i in range(6)):
+            for i in range(l, r):
+                screen.blit(green_surface, (x * 30, (y + i) * 30))
+            return 2
+        if y + r <= 19 and y + l >= 1 and all(markers[x][y + l + i] == 2 for i in range(6)):
+            for i in range(l, r):
+                screen.blit(blue_surface, (x * 30, (y + i) * 30))
+            return 3
+        l -= 1
+        r -= 1
+
+    #Check hàng chéo góc phần tư thứ II và IV
+    l, r = 0, 6  # Thay đổi số quân cần nối là 6
+    while l >= -5 and r >= 1:
+        if x + r <= 19 and y + r <= 19 and x + l >= 1 and y + l >= 1 and all(markers[x + l + i][y + l + i] == 0 for i in range(6)):
+            for i in range(l, r):
+                screen.blit(red_surface, ((x + i) * 30, (y + i) * 30))
+            return 1
+        if x + r <= 19 and y + r <= 19 and x + l >= 1 and y + l >= 1 and all(markers[x + l + i][y + l + i] == 1 for i in range(6)):
+            for i in range(l, r):
+                screen.blit(green_surface, ((x + i) * 30, (y + i) * 30))
+            return 2
+        if x + r <= 19 and y + r <= 19 and x + l >= 1 and y + l >= 1 and all(markers[x + l + i][y + l + i] == 2 for i in range(6)):
+            for i in range(l, r):
+                screen.blit(blue_surface, ((x + i) * 30, (y + i) * 30))
+            return 3
+        l -= 1
+        r -= 1
+
+    #Check chéo góc phần tư thứ I và III
+    l, r = 0, 6  # Thay đổi số quân cần nối là 6
+    while l >= -5 and r >= 1:
+        if x + r <= 19 and y - r >= 0 and x + l >= 1 and y - l <= 18 and all(markers[x + l + i][y - l - i] == 0 for i in range(6)):
+            for i in range(l, r):
+                screen.blit(red_surface, ((x + i) * 30, (y - i) * 30))
+            return 1
+        if x + r <= 19 and y - r >= 0 and x + l >= 1 and y - l <= 18 and all(markers[x + l + i][y - l - i] == 1 for i in range(6)):
+            for i in range(l, r):
+                screen.blit(green_surface, ((x + i) * 30, (y - i) * 30))
+            return 2
+        if x + r <= 19 and y - r >= 0 and x + l >= 1 and y - l <= 18 and all(markers[x + l + i][y - l - i] == 2 for i in range(6)):
+            for i in range(l, r):
+                screen.blit(blue_surface, ((x + i) * 30, (y - i) * 30))
+            return 3
+        l -= 1
+        r -= 1
+
+    # Nếu đánh hết bàn cờ mà chưa có người thắng thì là hòa
+    if cnt == 18 * 18:
+        return 0
+    # Nếu chưa đánh hết thì chưa có người thắng
+    return None
+
+
 # Khởi tạo lại trò chơi
 def restart():
-    global markers, player, winner, game_over, cnt, x, y
+    global markers, player, winner, game_over, cnt, x, y, count
     markers = [[-1 for _ in range(20)] for _ in range(20)] 
     player = 0          
     winner = None       
@@ -432,27 +512,42 @@ while run:
                         count += 1
                         markers[cell_x][cell_y] = player    #Gán giá trị của ô cho player 1 hoặc -1
 
-                        winner = check_winner(cell_x, cell_y, cnt)
+                        winner = check_winner4(cell_x, cell_y, cnt)
                         if winner != None:
                             game_over = True
                         
     
     if game_over == True:
-        draw_grid()
-        draw_markers()
-        check_winner(cell_x, cell_y, cnt)
-        draw_winner()
-        if event.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[0] == 1 and clicked == False:
-            clicked = True
-        if event.type == pygame.MOUSEBUTTONUP  and clicked == True:
-            clicked = False
-            pos = pygame.mouse.get_pos()
-            if again_rect.collidepoint(pos):
-                restart()
-            if menu_rect.collidepoint(pos): #Nếu click vào ô menu thì sẽ quay trở lại menu
-                restart()
-                screen.fill(black)
-                mode = None
+        if mode != 4:
+            draw_grid()
+            draw_markers()
+            check_winner(cell_x, cell_y, cnt)
+            draw_winner()
+            if event.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[0] == 1 and clicked == False:
+                clicked = True
+            if event.type == pygame.MOUSEBUTTONUP  and clicked == True:
+                clicked = False
+                pos = pygame.mouse.get_pos()
+                if again_rect.collidepoint(pos):
+                    restart()
+                if menu_rect.collidepoint(pos): #Nếu click vào ô menu thì sẽ quay trở lại menu
+                    restart()
+                    mode = None
+        else:
+            draw_grid()
+            draw_markers()
+            check_winner4(cell_x, cell_y, cnt)
+            draw_winner()
+            if event.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[0] == 1 and clicked == False:
+                clicked = True
+            if event.type == pygame.MOUSEBUTTONUP  and clicked == True:
+                clicked = False
+                pos = pygame.mouse.get_pos()
+                if again_rect.collidepoint(pos):
+                    restart()
+                if menu_rect.collidepoint(pos): #Nếu click vào ô menu thì sẽ quay trở lại menu
+                    restart()
+                    mode = None
     pygame.display.update()
 
 pygame.quit()
