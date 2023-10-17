@@ -4,23 +4,24 @@ pygame.init()
 
 screen_width = 600
 screen_height = 600
-line_width = 1
 
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption('Cờ Caro')
 
+#Định nghĩa âm thanh
 movement_sound0 = pygame.mixer.Sound('sound\\tic.wav')
 movement_sound1 = pygame.mixer.Sound('sound\\ticc.wav')
 hover_sound = pygame.mixer.Sound('sound\\hover_sound.wav')
 hover_sound.set_volume(0.1)
 
+#Định nghĩa hình ảnh
 x_marker = pygame.image.load('assets\\x.png')
 o_marker = pygame.image.load('assets\\o.png')
 l_marker = pygame.image.load('assets\\1.png')
 xx_marker = pygame.image.load('assets\\xx.png')
 menu_background = pygame.image.load('assets\\menu_background.jpg')
 menu_img = pygame.image.load('assets\\menu.png')
-menuu_img = pygame.image.load('assets\\menuu.png')
+menu_hover = pygame.image.load('assets\\menuu.png')
 mode_img = pygame.image.load('assets\\mode.png')
 mode1_img = pygame.image.load('assets\\mode1.png')
 mode1_hover = pygame.image.load('assets\\mode11.png')
@@ -35,7 +36,7 @@ draw_img = pygame.image.load('assets\\draw.png')
 play_gain_img = pygame.image.load('assets\\play_again.png')
 play_gain_hover_img = pygame.image.load('assets\\play_again_hover.png')
 
-
+#Các biến
 markers = [[-1 for _ in range(20)] for _ in range(20)]  #Lưu các ô đã được đánh dấu X và O
 clicked = False  #Kiểm tra xem đã click hay chưa
 player = 0   
@@ -61,13 +62,12 @@ font = pygame.font.SysFont("VCR OSD Mono", 35)
 font1 = pygame.font.SysFont("VCR OSD Mono", 45)
 font2 = pygame.font.SysFont("VCR OSD Mono", 25)
 
-#Hình vuông đánh lại
-again_rect = pygame.Rect(screen_width // 2 - 150, screen_height // 2 + 10, 300, 50)
-menu_rect = pygame.Rect(250, 0, 80, 27)
-mode_rect = pygame.Rect(100, 50, 400, 50)
-mode1_rect = pygame.Rect(80, 200, 440, 50)
-mode2_rect = pygame.Rect(80, 300, 440, 50)
-mode3_rect = pygame.Rect(80, 400, 440, 50)
+#Định nghĩa các hình vuông
+again_rect = pygame.Rect(140, 310, 300, 50)
+menu_rect = pygame.Rect(250, 0, 85, 27)
+mode1_rect = pygame.Rect(80, 200, 455, 50)
+mode2_rect = pygame.Rect(80, 300, 455, 50)
+mode3_rect = pygame.Rect(80, 400, 455, 50)
 
 gray_surface = pygame.Surface((30, 30), pygame.SRCALPHA)
 pygame.draw.rect(gray_surface, gray, (0, 0, 30, 30))
@@ -94,9 +94,6 @@ def draw_menu():
         if not mode2_rect.collidepoint(pos) and not mode3_rect.collidepoint(pos):
             isPlayingSound = False
         screen.blit(mode1_img, (80, 200))
-
-    # if not mode1_rect.collidepoint(pos) and not mode2_rect.collidepoint(pos) and not mode3_rect.collidepoint(pos):
-    #     isPlayingSound = False
     
     if mode2_rect.collidepoint(pos):
         screen.blit(mode2_hover, (80, 305))
@@ -123,18 +120,18 @@ def draw_grid():
     screen.blit(menu_background, (0, 0))
     pygame.draw.rect(screen, white, (30, 30, 540, 540))
     x = 1
-    pygame.draw.line(screen, gray, (30, x * 30), (screen_width - 30, x * 30), line_width + 2)
-    pygame.draw.line(screen, gray, (x * 30, 30), (x * 30, screen_height - 30), line_width + 2)
+    pygame.draw.line(screen, gray, (30, x * 30), (screen_width - 30, x * 30), 3)
+    pygame.draw.line(screen, gray, (x * 30, 30), (x * 30, screen_height - 30), 3)
     x = 19
-    pygame.draw.line(screen, gray, (30, x * 30), (screen_width - 30, x * 30), line_width + 2)
-    pygame.draw.line(screen, gray, (x * 30, 30), (x * 30, screen_height - 30), line_width + 2)
+    pygame.draw.line(screen, gray, (30, x * 30), (screen_width - 30, x * 30), 3)
+    pygame.draw.line(screen, gray, (x * 30, 30), (x * 30, screen_height - 30), 3)
     for x in range(2, 19):
-        pygame.draw.line(screen, gray, (30, x * 30), (screen_width - 30, x * 30), line_width)
-        pygame.draw.line(screen, gray, (x * 30, 30), (x * 30, screen_height - 30), line_width)
+        pygame.draw.line(screen, gray, (30, x * 30), (screen_width - 30, x * 30), 1)
+        pygame.draw.line(screen, gray, (x * 30, 30), (x * 30, screen_height - 30), 1)
 
     pos = pygame.mouse.get_pos()
     if menu_rect.collidepoint(pos):
-        screen.blit(menuu_img, (250, -5))
+        screen.blit(menu_hover, (250, -5))
         if not isPlayingSound:
             hover_sound.play()
             isPlayingSound = True 
@@ -303,6 +300,7 @@ while run:
                     mode = 2
                 if mode3_rect.collidepoint(pos):
                     mode = 3
+
         else:
             if mode == 1:
                 if winner == None:
