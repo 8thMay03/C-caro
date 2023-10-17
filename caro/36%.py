@@ -29,6 +29,8 @@ mode2_img = pygame.image.load('assets\\mode2.png')
 mode2_hover = pygame.image.load('assets\\mode22.png')
 mode3_img = pygame.image.load('assets\\mode3.png')
 mode3_hover = pygame.image.load('assets\\mode33.png')
+mode4_img = pygame.image.load('assets\\mode4.png')
+mode4_hover = pygame.image.load('assets\\mode4_hover.png')
 player1_won_img = pygame.image.load('assets\\player1_won.png')
 player2_won_img = pygame.image.load('assets\\player2_won.png')
 player3_won_img = pygame.image.load('assets\\player3_won.png')
@@ -43,9 +45,12 @@ player = 0
 winner = None       
 game_over = False
 cnt = 0   #Đếm xem bao nhiêu ô đã được đánh dấu
+count = 0
 mode = None
 x = None
 y = None
+x1 = None
+y1 = None
 isPlayingSound = False
 
 #Đĩnh nghĩa màu và font chữ
@@ -68,6 +73,7 @@ menu_rect = pygame.Rect(250, 0, 85, 27)
 mode1_rect = pygame.Rect(80, 200, 455, 50)
 mode2_rect = pygame.Rect(80, 300, 455, 50)
 mode3_rect = pygame.Rect(80, 400, 455, 50)
+mode4_rect = pygame.Rect(80, 500, 455, 50)
 
 gray_surface = pygame.Surface((30, 30), pygame.SRCALPHA)
 pygame.draw.rect(gray_surface, gray, (0, 0, 30, 30))
@@ -91,7 +97,7 @@ def draw_menu():
             hover_sound.play()
             isPlayingSound = True 
     else:
-        if not mode2_rect.collidepoint(pos) and not mode3_rect.collidepoint(pos):
+        if not mode2_rect.collidepoint(pos) and not mode3_rect.collidepoint(pos) and not mode4_rect.collidepoint(pos):
             isPlayingSound = False
         screen.blit(mode1_img, (80, 200))
     
@@ -101,7 +107,7 @@ def draw_menu():
             hover_sound.play()
             isPlayingSound = True 
     else:
-        if not mode1_rect.collidepoint(pos) and not mode3_rect.collidepoint(pos):
+        if not mode1_rect.collidepoint(pos) and not mode3_rect.collidepoint(pos) and not mode4_rect.collidepoint(pos):
             isPlayingSound = False
         screen.blit(mode2_img, (80, 300))
     
@@ -111,9 +117,19 @@ def draw_menu():
             hover_sound.play()
             isPlayingSound = True 
     else:
-        if not mode1_rect.collidepoint(pos) and not mode2_rect.collidepoint(pos):
+        if not mode1_rect.collidepoint(pos) and not mode2_rect.collidepoint(pos) and not mode4_rect.collidepoint(pos):
             isPlayingSound = False
         screen.blit(mode3_img, (80, 400))
+    
+    if mode4_rect.collidepoint(pos):
+        screen.blit(mode4_hover, (80, 505))
+        if not isPlayingSound:
+            hover_sound.play()
+            isPlayingSound = True 
+    else:
+        if not mode1_rect.collidepoint(pos) and not mode2_rect.collidepoint(pos) and not mode3_rect.collidepoint(pos):
+            isPlayingSound = False
+        screen.blit(mode4_img, (80, 500))
 #Vẽ lưới
 def draw_grid():
     global isPlayingSound
@@ -263,6 +279,7 @@ def restart():
     winner = None       
     game_over = False
     cnt = 0
+    count = 0
     x = None
     y = None
 
@@ -284,6 +301,13 @@ while run:
             screen.blit(gray_surface, (x * 30, y * 30))
             draw_markers3()
 
+    elif mode == 4:
+        draw_grid()
+        draw_markers()
+        if x != None and y != None :
+            screen.blit(gray_surface, (x * 30, y * 30))
+            draw_markers()
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
@@ -300,11 +324,11 @@ while run:
                     mode = 2
                 if mode3_rect.collidepoint(pos):
                     mode = 3
-
+                if mode4_rect.collidepoint(pos):
+                    mode = 4
         else:
             if mode == 1:
                 if winner == None:
-                    pos = pygame.mouse.get_pos()
                     if event.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[0] == 1 and clicked == False: #Nếu click chuột trái thì mới được tính là đã click
                         clicked = True
                     if event.type == pygame.MOUSEBUTTONUP  and clicked == True:
@@ -329,7 +353,6 @@ while run:
                         winner = check_winner(cell_x, cell_y, cnt)
                         if winner != None:
                             game_over = True
-
             if mode == 2:
                 if winner == None:
                     if event.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[0] == 1 and clicked == False: #Nếu click chuột trái thì mới được tính là đã click
@@ -382,6 +405,37 @@ while run:
                         winner = check_winner(cell_x, cell_y, cnt)
                         if winner != None:
                             game_over = True
+            if mode == 4:
+                if winner == None:
+                    if count == 2:
+                        count = 0
+                        player = (player + 1) % 2
+                    if event.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[0] == 1 and clicked == False: #Nếu click chuột trái thì mới được tính là đã click
+                        clicked = True
+                    if event.type == pygame.MOUSEBUTTONUP  and clicked == True:
+                        clicked = False
+                        pos = pygame.mouse.get_pos()
+                        if menu_rect.collidepoint(pos): #Nếu click vào ô menu thì sẽ quay trở lại menu
+                            restart()
+                            mode = None
+                            continue
+                        cell_x = pos[0] // 30
+                        cell_y = pos[1] // 30
+                        if markers[cell_x][cell_y] != -1 or cell_x == 19 or cell_x == 0 or cell_y == 19 or cell_y == 0:    #Nếu 1 ô đã được đánh dấu rồi thì không được thao tác trên ô đó nữa
+                            continue
+                        if player == 0:             #Player 1 thì dùng sound0
+                            movement_sound0.play()
+                        else:                       #Player 2 thì dùng sound1
+                            movement_sound1.play()
+                        x, y = cell_x, cell_y                           
+                        cnt += 1
+                        count += 1
+                        markers[cell_x][cell_y] = player    #Gán giá trị của ô cho player 1 hoặc -1
+
+                        winner = check_winner(cell_x, cell_y, cnt)
+                        if winner != None:
+                            game_over = True
+                        
     
     if game_over == True:
         draw_grid()
