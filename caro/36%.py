@@ -63,9 +63,6 @@ black = (0, 0, 0, 120)
 yellow = (209, 201, 42, 180)
 pink = (235, 19, 199, 120)
 gray = (180, 185, 194, 120)
-font = pygame.font.SysFont("VCR OSD Mono", 35)
-font1 = pygame.font.SysFont("VCR OSD Mono", 45)
-font2 = pygame.font.SysFont("VCR OSD Mono", 25)
 
 #Định nghĩa các hình vuông
 again_rect = pygame.Rect(140, 310, 300, 50)
